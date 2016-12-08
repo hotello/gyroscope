@@ -1,0 +1,37 @@
+<template name="Posts_list">
+  {{> EasySearch.Input index=postsIndex}}
+
+  {{#EasySearch.Each index=postsIndex}}
+    <p>{{title}}</p>
+  {{/EasySearch.Each}}
+
+  {{#EasySearch.IfNoResults index=postsIndex}}
+    <p>No results found!</p>
+  {{/EasySearch.IfNoResults}}
+
+  {{#EasySearch.IfSearching index=postsIndex}}
+    <p>Searching...</p>
+  {{/EasySearch.IfSearching}}
+
+  {{> EasySearch.LoadMore index=postsIndex content="Load more..."}}
+</template>
+
+<template name="Posts_form_insert">
+  {{> quickForm
+    schema=schema
+    id="Posts_form_insert"
+    type="method"
+    meteormethod="posts.insert"
+  }}
+</template>
+
+<template name="Posts_form_update">
+  {{> quickForm
+    schema=schema
+    id="Posts_form_update"
+    doc=post
+    type="method-update"
+    meteormethod="posts.update"
+    singleMethodArgument=true
+  }}
+</template>
