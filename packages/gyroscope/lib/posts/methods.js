@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 
-import { Gyro } from '../core/gyroscope.js';
+import { Gyroscope } from '../core/gyroscope.js';
 import { Posts } from './posts.js';
 import { ID_FIELD } from '../core/collections-helpers.js';
 
@@ -15,49 +15,43 @@ export const POSTS_ID_ONLY = new SimpleSchema({
   postId: ID_FIELD
 }).validator();
 
-export const insert = function(opts) {
-  return {
-    name: 'posts.insert',
-    validate: POSTS_METHODS_SCHEMA.validator(),
-    run(post) {
-      if (opts.can.cant(this.userId, 'posts.insert')) {
-        throw new Meteor.Error('posts.insert.unauthorized');
-      }
-      // set userId for post
-      post.userId = this.userId;
-
-      return Posts.insert(post);
+export const insert = new ValidatedMethod({
+  name: 'posts.insert',
+  validate: POSTS_METHODS_SCHEMA.validator(),
+  run(post) {
+    if (Gyroscope.permit.notToDo(this.userId, 'posts.insert')) {
+      throw new Meteor.Error('posts.insert.unauthorized');
     }
-  };
-};
+    // set userId for post
+    post.userId = this.userId;
 
-export const update = function (opts) {
-  return {
-    name: 'posts.update',
-    validate: new SimpleSchema({
-      postId: ID_FIELD,
-      post: {type: POSTS_METHODS_SCHEMA}
-    }).validator(),
-    run({ postId, post }) {
-      if (opts.can.cant(this.userId, 'posts.update')) {
-        throw new Meteor.Error('posts.update.unauthorized');
-      }
+    return Posts.insert(post);
+  }
+});
 
-      return Posts.update(postId, {$set: post});
+export const update = new ValidatedMethod({
+  name: 'posts.update',
+  validate: new SimpleSchema({
+    postId: ID_FIELD,
+    post: {type: POSTS_METHODS_SCHEMA}
+  }).validator(),
+  run({ postId, post }) {
+    if (Gyroscope.permit.notToDo(this.userId, 'posts.update')) {
+      throw new Meteor.Error('posts.update.unauthorized');
     }
-  };
-};
 
-export const remove = function (opts) {
-  return {
-    name: 'posts.remove',
-    validate: POSTS_ID_ONLY,
-    run({ postId }) {
-      if (opts.can.cant(this.userId, 'posts.delete')) {
-        throw new Meteor.Error('posts.remove.unauthorized');
-      }
+    return Posts.update(postId, {$set: post});
+  }
+});
 
-      return Posts.remove(postId);
+export const remove = new ValidatedMethod({
+  name: 'posts.remove',
+  validate: POSTS_ID_ONLY,
+  run({ postId }) {
+    if (Gyroscope.permit.notToDo(this.userId, 'posts.delete')) {
+      throw new Meteor.Error('posts.remove.unauthorized');
     }
-  };
-};
+
+    return Posts.remove(postId);
+  }
+});

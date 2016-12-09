@@ -6,6 +6,7 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 // ids for schemas
 export const ID_FIELD = {type: String, regEx: SimpleSchema.RegEx.Id};
+export const ID_FIELD_OPT = {type: String, regEx: SimpleSchema.RegEx.Id, optional: true};
 
 // set creation date automatically
 export const setCreatedAt = function() {

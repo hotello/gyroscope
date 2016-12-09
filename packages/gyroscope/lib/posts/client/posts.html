@@ -2,18 +2,38 @@
   {{> EasySearch.Input index=postsIndex}}
 
   {{#EasySearch.Each index=postsIndex}}
-    <p>{{title}}</p>
+    {{> Template.contentBlock post=this}}
   {{/EasySearch.Each}}
 
-  {{#EasySearch.IfNoResults index=postsIndex}}
-    <p>No results found!</p>
+  {{#EasySearch.IfNoResults index=postsIndex template=noResultsTemplate}}
+    {{#if template}}
+      {{> Template.dynamic template=template}}
+    {{else}}
+      {{> Posts_no_results}}
+    {{/if}}
   {{/EasySearch.IfNoResults}}
 
-  {{#EasySearch.IfSearching index=postsIndex}}
-    <p>Searching...</p>
+  {{#EasySearch.IfSearching index=postsIndex template=searchingTemplate}}
+    {{#if template}}
+      {{> Template.dynamic template=template}}
+    {{else}}
+      {{> Posts_searching}}
+    {{/if}}
   {{/EasySearch.IfSearching}}
 
-  {{> EasySearch.LoadMore index=postsIndex content="Load more..."}}
+  {{> EasySearch.LoadMore index=postsIndex content=loadMoreMessage}}
+</template>
+
+<template name="Posts_no_results">
+  <p>No posts found :(</p>
+</template>
+
+<template name="Posts_searching">
+  <p>Looking for posts...</p>
+</template>
+
+<template name="Posts_item">
+  {{> Template.contentBlock post=post}}
 </template>
 
 <template name="Posts_form_insert">

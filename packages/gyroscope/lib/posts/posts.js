@@ -7,7 +7,8 @@ import { _ } from 'meteor/underscore';
 import faker from 'faker';
 import slug from 'slug';
 
-import { ID_FIELD, setCreatedAt } from '../core/collections-helpers.js';
+import { Gyroscope } from '../core/gyroscope.js';
+import { ID_FIELD_OPT, setCreatedAt } from '../core/collections-helpers.js';
 
 export const Posts = new Mongo.Collection('posts');
 
@@ -29,20 +30,18 @@ Posts.schema = new SimpleSchema({
   title: {type: String, max: 500},
   slug: {type: String, unique: true, autoValue: setSlug},
   body: {type: String, max: 3000},
-  userId: ID_FIELD
+  userId: ID_FIELD_OPT
 });
 // attach schema
 Posts.attachSchema(Posts.schema);
 
 // init search with a function, for dynamic setup
-export const postsIndex = function(opts) {
-  return new Index({
-    collection: Posts,
-    fields: ['title', 'body'],
-    engine: new MongoDBEngine(),
-    permission: (options) => opts.can.can(options.userId, 'posts.search')
-  });
-};
+export const PostsIndex = new Index({
+  collection: Posts,
+  fields: ['title', 'body'],
+  engine: new MongoDBEngine(),
+  permission: (options) => Gyroscope.permit.toDo(options.userId, 'posts.search')
+});
 
 // define factory generators for tests
 Factory.define('post', Posts, {

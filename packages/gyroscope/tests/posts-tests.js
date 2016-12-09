@@ -3,11 +3,15 @@ import { assert } from 'meteor/practicalmeteor:chai';
 import { Mongo } from 'meteor/mongo';
 import { Random } from 'meteor/random';
 import { Factory } from 'meteor/dburles:factory';
+import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 
 import { Gyroscope } from '../lib/core/gyroscope.js';
-import { Posts } from '../lib/posts/posts.js';
-
-import { gyroscope } from './tests-helpers.js';
+import { Posts, PostsIndex } from '../lib/posts/posts.js';
+import {
+  insert,
+  update,
+  remove
+} from '../lib/posts/methods.js';
 
 Meteor.methods({
   'test.resetPosts': () => Posts.remove({}),
@@ -47,8 +51,6 @@ describe('posts', function() {
 
   describe('methods', function() {
     const userId = Random.id();
-    const methods = gyroscope._methods.posts;
-
     let methodInvocation = {userId};
 
     beforeEach(function(done) {
@@ -57,7 +59,7 @@ describe('posts', function() {
 
     it('should insert posts', function() {
       const post = Factory.tree('post.fromForm');
-      const result = methods.insert._execute(methodInvocation, post);
+      const result = insert._execute(methodInvocation, post);
 
       assert.isString(result);
     });
@@ -65,31 +67,51 @@ describe('posts', function() {
     it('should update posts', function() {
       const postId = Factory.create('post')._id;
       const post = Factory.tree('post.fromForm');
-      const result = methods.update._execute(methodInvocation, { postId, post});
+      const result = update._execute(methodInvocation, { postId, post});
 
       assert.equal(result, 1);
     });
 
     it('should remove posts', function() {
       const postId = Factory.create('post')._id;
-      const result = methods.remove._execute(methodInvocation, { postId });
+      const result = remove._execute(methodInvocation, { postId });
 
       assert.equal(result, 1);
     });
   });
 
+  describe('publications', function() {
+    if (Meteor.isServer) {
+      it('should send a single post', function (done) {
+        const collector = new PublicationCollector();
+        const post = Factory.create('post');
+
+        collector.collect('posts.single', post._id, (collections) => {
+          assert.equal(collections.posts.length, 1);
+          done();
+        });
+      });
+    }
+  });
+
   describe('search', function() {
-    const index = gyroscope._indexes.posts;
+    const index = PostsIndex;
 
     beforeEach(function(done) {
       Meteor.call('test.resetPosts', done);
     });
 
-    it('should search for posts by text', function() {
-      const post = Factory.create('post');
-      const posts = index.search(post.title).fetch();
+    if (Meteor.isServer) {
+      it('should search for posts by text', function() {
+        Gyroscope.permit.setPermissions({
+          'posts.search': () => true,
+        });
 
-      assert.equal(posts.length, 1);
-    });
+        const post = Factory.create('post');
+        const posts = index.search(post.title).fetch();
+
+        assert.equal(posts.length, 1);
+      });
+    }
   });
 });

@@ -47,12 +47,13 @@ Package.onTest(function(api) {
   api.use([
     'ecmascript',
     'practicalmeteor:mocha',
-    'xolvio:cleaner'
-    // 'johanbrook:publication-collector'
+    'xolvio:cleaner',
+    'johanbrook:publication-collector'
   ]);
 
   api.addFiles([
     'tests/tests-helpers.js',
+    'tests/core-tests.js',
     'tests/posts-tests.js'
   ]);
 });

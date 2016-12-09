@@ -1,5 +1,22 @@
 <body>
   <h1>Welcome</h1>
 
-  {{> Posts_list postsIndex=postsIndex}}
+  {{#Posts_item postId="dwH4MyE3ori8dBbDA"}}
+    <h1>{{post.title}}</h1>
+  {{/Posts_item }}
+
+  {{#Posts_list
+    noResultsTemplate="noResultsCustom"
+    searchingTemplate="searchingCustom"
+  }}
+    <p>{{post.title}}</p>
+  {{/Posts_list}}
 </body>
+
+<template name="noResultsCustom">
+  <p>Belin nu ghe ninte!</p>
+</template>
+
+<template name="searchingCustom">
+  <p>Vedemmu che ghe chi...</p>
+</template>

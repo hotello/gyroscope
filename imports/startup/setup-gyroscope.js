@@ -1,14 +1,12 @@
 import { Gyroscope } from 'meteor/hotello:gyroscope';
 
-const canFn = (userId, data) => {
-  return userId ? true : false;
-};
+const always = () => true;
 
-export const gyroscope = new Gyroscope({
-  permissions: {
-    'posts.insert': canFn,
-    'posts.update': canFn,
-    'posts.delete': canFn,
-    'posts.search': () => true
-  }
+Gyroscope.permit.setPermissions({
+  'posts.insert': always,
+  'posts.update': always,
+  'posts.delete': always,
+  'posts.search': always
 });
+
+Gyroscope.messages['posts.loadMore'] = 'Carega carega!!!'
