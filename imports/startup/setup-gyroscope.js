@@ -9,4 +9,6 @@ Gyroscope.permit.setPermissions({
   'posts.search': always
 });
 
-Gyroscope.messages['posts.loadMore'] = 'Carega carega!!!'
+Gyroscope.messages.setMessages({
+  'posts.loadMore': 'Carega carega!!!'
+});

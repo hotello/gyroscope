@@ -20,18 +20,18 @@ Template.Posts_list.helpers({
  * Posts_item
  */
 Template.Posts_item.onCreated(function() {
+  this.getPostId = () => Template.currentData().postId;
+
   this.autorun(() => {
     new SimpleSchema({
       postId: ID_FIELD
     }).validate(Template.currentData());
 
-    this.getPostId = () => Template.currentData().postId;
-
     this.subscribe('posts.single', this.getPostId());
   });
 });
 Template.Posts_item.helpers({
-  post: function() {
+  post() {
     const instance = Template.instance();
 
     return Posts.findOne(instance.getPostId());
@@ -51,9 +51,24 @@ Template.Posts_form_insert.helpers({
  * Posts_form_update
  */
 Template.Posts_form_update.onCreated(function() {
+  this.getPostId = () => Template.currentData().postId;
+
   this.autorun(() => {
     new SimpleSchema({
-      post: {type: Posts.schema}
+      postId: ID_FIELD
     }).validate(Template.currentData());
+
+    this.subscribe('posts.single', this.getPostId());
   });
+});
+Template.Posts_form_update.helpers({
+  schema() {
+    return POSTS_METHODS_SCHEMA;
+  },
+
+  post() {
+    const instance = Template.instance();
+
+    return Posts.findOne(instance.getPostId());
+  }
 });

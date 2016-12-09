@@ -1,9 +1,24 @@
 <body>
-  <h1>Welcome</h1>
 
-  {{#Posts_item postId="dwH4MyE3ori8dBbDA"}}
-    <h1>{{post.title}}</h1>
+  <h1>Gyroscope Demo</h1>
+
+  <p>Go in imports/ui/body.html and set a valid postId on components.</p>
+  <p>Gyroscope setup in imports/startup/setup-gyroscope.js</p>
+
+  <h2>Posts Forms</h2>
+
+  {{> Posts_form_insert ""}}
+
+  {{> Posts_form_update postId="dwH4MyE3ori8dBbDA"}} <!-- HERE!!! -->
+
+  <h2>Posts Single</h2>
+
+  {{#Posts_item postId="dwH4MyE3ori8dBbDA"}} <!-- HERE!!! -->
+    <h3>{{post.title}}</h3>
+    <p>{{post.body}}</p>
   {{/Posts_item }}
+
+  <h2>Posts List</h2>
 
   {{#Posts_list
     noResultsTemplate="noResultsCustom"
@@ -11,6 +26,7 @@
   }}
     <p>{{post.title}}</p>
   {{/Posts_list}}
+
 </body>
 
 <template name="noResultsCustom">
