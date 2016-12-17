@@ -5,11 +5,15 @@ import { Factory } from 'meteor/dburles:factory';
 import { Random } from 'meteor/random';
 import { _ } from 'meteor/underscore';
 import faker from 'faker';
-import slug from 'slug';
 
-import { Gyroscope } from '../core/gyroscope.js';
-import { ID_FIELD_OPT, setCreatedAt } from '../core/collections-helpers.js';
+import { permit } from '../core/gyroscope.js';
+import {
+  ID_FIELD_OPT,
+  setCreatedAt,
+  setSlugFromTitle
+} from '../core/collections-helpers.js';
 
+// create collection
 export const Posts = new Mongo.Collection('posts');
 
 // deny everything
@@ -19,28 +23,24 @@ Posts.deny({
   remove() { return true; },
 });
 
-// set slug automatically
-const setSlug = function() {
-  return slug(this.field('title').value);
-};
-
 // generate schema
 Posts.schema = new SimpleSchema({
   createdAt: {type: Date, autoValue: setCreatedAt},
   title: {type: String, max: 500},
-  slug: {type: String, unique: true, autoValue: setSlug},
+  slug: {type: String, unique: true, autoValue: setSlugFromTitle},
   body: {type: String, max: 3000},
-  userId: ID_FIELD_OPT
+  userId: ID_FIELD_OPT,
+  categories: {type: [String], regEx: SimpleSchema.RegEx.Id, optional: true}
 });
 // attach schema
 Posts.attachSchema(Posts.schema);
 
 // init search with a function, for dynamic setup
-export const PostsIndex = new Index({
+export const postsIndex = new Index({
   collection: Posts,
   fields: ['title', 'body'],
   engine: new MongoDBEngine(),
-  permission: (options) => Gyroscope.permit.toDo(options.userId, 'posts.search')
+  permission: (options) => permit.toDo(options.userId, 'posts.search')
 });
 
 // define factory generators for tests

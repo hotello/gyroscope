@@ -1,4 +1,5 @@
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import slug from 'slug';
 
 /**
  * Helpers for SimpleSchema
@@ -17,4 +18,9 @@ export const setCreatedAt = function() {
   } else {
     this.unset();
   }
-}
+};
+
+// set slug automatically
+export const setSlugFromTitle = function() {
+  return slug(this.field('title').value);
+};

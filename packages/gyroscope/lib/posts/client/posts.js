@@ -1,8 +1,8 @@
 import { Template } from 'meteor/templating';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
-import { Gyroscope } from '../../core/gyroscope.js';
-import { Posts, PostsIndex } from '../posts.js';
+import { messages } from '../../core/gyroscope.js';
+import { Posts, postsIndex } from '../posts.js';
 import { POSTS_METHODS_SCHEMA, insert } from '../methods.js';
 import { ID_FIELD } from '../../core/collections-helpers.js';
 
@@ -12,8 +12,8 @@ import './posts.html';
  * Posts_list
  */
 Template.Posts_list.helpers({
-  postsIndex: () => PostsIndex,
-  loadMoreMessage: () => Gyroscope.messages.get('posts.loadMore')
+  postsIndex: () => postsIndex,
+  loadMoreMessage: () => messages.get('posts.loadMore')
 });
 
 /**

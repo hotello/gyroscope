@@ -1,5 +1,7 @@
 <template name="Posts_list">
-  {{> EasySearch.Input index=postsIndex}}
+  {{#if showInput}}
+    {{> EasySearch.Input index=postsIndex}}
+  {{/if}}
 
   {{#EasySearch.Each index=postsIndex}}
     {{> Template.contentBlock post=this}}

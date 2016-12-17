@@ -6,7 +6,7 @@ import { Factory } from 'meteor/dburles:factory';
 import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 
 import { Gyroscope } from '../lib/core/gyroscope.js';
-import { Posts, PostsIndex } from '../lib/posts/posts.js';
+import { Posts, postsIndex } from '../lib/posts/posts.js';
 import {
   insert,
   update,
@@ -95,7 +95,7 @@ describe('posts', function() {
   });
 
   describe('search', function() {
-    const index = PostsIndex;
+    const index = postsIndex;
 
     beforeEach(function(done) {
       Meteor.call('test.resetPosts', done);
