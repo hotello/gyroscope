@@ -5,8 +5,12 @@ const always = () => true;
 Gyroscope.permit.setPermissions({
   'posts.insert': always,
   'posts.update': always,
-  'posts.delete': always,
-  'posts.search': always
+  'posts.remove': always,
+  'posts.search': always,
+
+  'categories.insert': always,
+  'categories.update': always,
+  'categories.remove': always,
 });
 
 Gyroscope.messages.setMessages({

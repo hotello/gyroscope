@@ -30,7 +30,7 @@ Package.onUse(function(api) {
     'aldeed:collection2@2.10.0',
     'dburles:factory@1.1.0',
     'aldeed:autoform@5.8.1',
-    'mdg:validated-method@1.3.0',
+    'mdg:validated-method@1.1.0',
 
     'easy:search@2.1.4',
   ]);
@@ -52,6 +52,7 @@ Package.onTest(function(api) {
   api.addFiles([
     'tests/tests-helpers.js',
     'tests/core-tests.js',
-    'tests/posts-tests.js'
+    'tests/posts-tests.js',
+    'tests/categories-tests.js'
   ]);
 });

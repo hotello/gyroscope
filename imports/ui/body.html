@@ -5,21 +5,19 @@
   <p>Go in imports/ui/body.html and set a valid postId on components.</p>
   <p>Gyroscope setup in imports/startup/setup-gyroscope.js</p>
 
-  <h2>Posts Forms</h2>
+  <h2>Posts</h2>
 
-  {{> Posts_form_insert categoryId="dwH4MyE3ori8dBbDE"}}
+  <h3>Forms</h3>
+  {{> Posts_form_insert categoryId=categoryId}}
+  {{> Posts_form_update postId=postId}}
 
-  {{> Posts_form_update postId="dwH4MyE3ori8dBbDA"}} <!-- HERE!!! -->
-
-  <h2>Posts Single</h2>
-
-  {{#Posts_item postId="dwH4MyE3ori8dBbDA"}} <!-- HERE!!! -->
-    <h3>{{post.title}}</h3>
+  <h3>Single</h3>
+  {{#Posts_item postId=postId}}
+    <h4>{{post.title}}</h4>
     <p>{{post.body}}</p>
   {{/Posts_item }}
 
-  <h2>Posts List</h2>
-
+  <h3>List</h3>
   {{#Posts_list
     showInput=true
     noResultsTemplate="noResultsCustom"
@@ -27,6 +25,17 @@
   }}
     <p>{{post.title}}</p>
   {{/Posts_list}}
+
+  <h2>Categories</h2>
+
+  <h3>Forms</h3>
+  {{> Categories_form_insert ""}}
+  {{> Categories_form_update categoryId=categoryId}}
+
+  <h3>List</h3>
+  {{#Categories_list}}
+    <p>{{category.name}}</p>
+  {{/Categories_list}}
 
 </body>
 

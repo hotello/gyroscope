@@ -5,9 +5,15 @@ export const config = {
   permit: {
     'posts.insert': withUser,
     'posts.update': withUser,
-    'posts.delete': withUser,
+    'posts.remove': withUser,
     'posts.search': noUser,
-    'posts.publish.single': noUser
+    'posts.publish.single': noUser,
+
+    'categories.insert': withUser,
+    'categories.update': withUser,
+    'categories.remove': withUser,
+    'categories.publish.all': noUser,
+    'categories.publish.single': noUser
   },
 
   messages: {

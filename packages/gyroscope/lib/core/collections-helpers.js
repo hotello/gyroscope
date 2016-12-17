@@ -21,9 +21,14 @@ export const setCreatedAt = function() {
   }
 };
 
-// set slug automatically
+// set slug automatically from title
 export const setSlugFromTitle = function() {
   return slug(this.field('title').value);
+};
+
+// set slug automatically from name
+export const setSlugFromName = function() {
+  return slug(this.field('name').value);
 };
 
 // transform field to array

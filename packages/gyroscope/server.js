@@ -4,5 +4,6 @@ import './both.js';
 
 import './lib/core/seed.js';
 import './lib/posts/server/publications.js';
+import './lib/categories/server/publications.js';
 
 export { Gyroscope };

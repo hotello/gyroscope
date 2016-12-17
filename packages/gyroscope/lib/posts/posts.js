@@ -51,3 +51,8 @@ Factory.define('post', Posts, {
   userId: () => Random.id(),
   categories: () => Random.id()
 });
+Factory.define('post.fromForm', Posts, {
+  title: () => faker.lorem.sentence(),
+  body: () => faker.lorem.paragraphs(),
+  categories: () => Random.id()
+});

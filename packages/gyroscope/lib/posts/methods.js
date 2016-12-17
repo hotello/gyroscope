@@ -19,7 +19,7 @@ export const POSTS_ID_ONLY = new SimpleSchema({
 
 export const insert = new ValidatedMethod({
   name: 'posts.insert',
-  validate: POSTS_METHODS_SCHEMA.validator({ clean: true }),
+  validate: POSTS_METHODS_SCHEMA.validator(),
   run(post) {
     if (permit.notToDo(this.userId, 'posts.insert')) {
       throw new Meteor.Error('posts.insert.unauthorized');
@@ -48,9 +48,9 @@ export const update = new ValidatedMethod({
 
 export const remove = new ValidatedMethod({
   name: 'posts.remove',
-  validate: POSTS_ID_ONLY.validator({ clean: true }),
+  validate: POSTS_ID_ONLY.validator(),
   run({ postId }) {
-    if (permit.notToDo(this.userId, 'posts.delete')) {
+    if (permit.notToDo(this.userId, 'posts.remove')) {
       throw new Meteor.Error('posts.remove.unauthorized');
     }
 
