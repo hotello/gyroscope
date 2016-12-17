@@ -1,23 +1,25 @@
 import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 import { permit } from '../core/gyroscope.js';
 import { Posts } from './posts.js';
-import { ID_FIELD } from '../core/collections-helpers.js';
+import { ID_FIELD, ID_FIELD_OPT } from '../core/collections-helpers.js';
 
 // common validator for methods
 export const POSTS_METHODS_SCHEMA = new SimpleSchema({
   title: Posts.simpleSchema().schema('title'),
-  body: Posts.simpleSchema().schema('body')
+  body: Posts.simpleSchema().schema('body'),
+  categories: ID_FIELD_OPT
 });
 // accept only ids
 export const POSTS_ID_ONLY = new SimpleSchema({
   postId: ID_FIELD
-}).validator();
+});
 
 export const insert = new ValidatedMethod({
   name: 'posts.insert',
-  validate: POSTS_METHODS_SCHEMA.validator(),
+  validate: POSTS_METHODS_SCHEMA.validator({ clean: true }),
   run(post) {
     if (permit.notToDo(this.userId, 'posts.insert')) {
       throw new Meteor.Error('posts.insert.unauthorized');
@@ -31,22 +33,22 @@ export const insert = new ValidatedMethod({
 
 export const update = new ValidatedMethod({
   name: 'posts.update',
-  validate: new SimpleSchema({
-    postId: ID_FIELD,
-    post: {type: POSTS_METHODS_SCHEMA}
-  }).validator(),
-  run({ postId, post }) {
+  validate({ _id, modifier }) {
+    POSTS_ID_ONLY.validate({postId: _id});
+    POSTS_METHODS_SCHEMA.validate(modifier, {modifier: true});
+  },
+  run({ _id, modifier }) {
     if (permit.notToDo(this.userId, 'posts.update')) {
       throw new Meteor.Error('posts.update.unauthorized');
     }
 
-    return Posts.update(postId, {$set: post});
+    return Posts.update(_id, modifier);
   }
 });
 
 export const remove = new ValidatedMethod({
   name: 'posts.remove',
-  validate: POSTS_ID_ONLY,
+  validate: POSTS_ID_ONLY.validator({ clean: true }),
   run({ postId }) {
     if (permit.notToDo(this.userId, 'posts.delete')) {
       throw new Meteor.Error('posts.remove.unauthorized');

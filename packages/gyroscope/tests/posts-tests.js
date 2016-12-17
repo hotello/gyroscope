@@ -58,7 +58,7 @@ describe('posts', function() {
     });
 
     it('should insert posts', function() {
-      const post = Factory.tree('post.fromForm');
+      const post = Factory.tree('post');
       const result = insert._execute(methodInvocation, post);
 
       assert.isString(result);
@@ -66,8 +66,8 @@ describe('posts', function() {
 
     it('should update posts', function() {
       const postId = Factory.create('post')._id;
-      const post = Factory.tree('post.fromForm');
-      const result = update._execute(methodInvocation, { postId, post});
+      const post = Factory.tree('post');
+      const result = update._execute(methodInvocation, {_id: postId, modifier: {$set: post}});
 
       assert.equal(result, 1);
     });

@@ -44,6 +44,10 @@ Template.Posts_item.helpers({
 Template.Posts_form_insert.helpers({
   schema() {
     return POSTS_METHODS_SCHEMA;
+  },
+
+  prefill(categoryId) {
+    return categoryId ? {categories: categoryId} : {};
   }
 });
 

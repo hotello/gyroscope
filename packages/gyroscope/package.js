@@ -30,15 +30,13 @@ Package.onUse(function(api) {
     'aldeed:collection2@2.10.0',
     'dburles:factory@1.1.0',
     'aldeed:autoform@5.8.1',
-    'mdg:validated-method@1.1.0',
+    'mdg:validated-method@1.3.0',
 
     'easy:search@2.1.4',
   ]);
 
   api.mainModule('client.js', 'client');
   api.mainModule('server.js', 'server');
-
-  // api.export('Gyroscope');
 });
 
 Package.onTest(function(api) {

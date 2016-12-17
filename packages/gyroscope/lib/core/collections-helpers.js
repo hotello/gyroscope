@@ -1,4 +1,5 @@
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { _ } from 'meteor/underscore';
 import slug from 'slug';
 
 /**
@@ -24,3 +25,16 @@ export const setCreatedAt = function() {
 export const setSlugFromTitle = function() {
   return slug(this.field('title').value);
 };
+
+// transform field to array
+export const categoriesToArray = function() {
+  const categories = this.field('categories').value;
+
+  if (_.isArray(categories)) {
+    return categories;
+  } else if (_.isString(categories)) {
+    return [categories];
+  } else {
+    this.unset();
+  }
+}

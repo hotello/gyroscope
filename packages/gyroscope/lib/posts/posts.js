@@ -10,7 +10,8 @@ import { permit } from '../core/gyroscope.js';
 import {
   ID_FIELD_OPT,
   setCreatedAt,
-  setSlugFromTitle
+  setSlugFromTitle,
+  categoriesToArray
 } from '../core/collections-helpers.js';
 
 // create collection
@@ -30,7 +31,7 @@ Posts.schema = new SimpleSchema({
   slug: {type: String, unique: true, autoValue: setSlugFromTitle},
   body: {type: String, max: 3000},
   userId: ID_FIELD_OPT,
-  categories: {type: [String], regEx: SimpleSchema.RegEx.Id, optional: true}
+  categories: {type: [String], regEx: SimpleSchema.RegEx.Id, optional: true, autoValue: categoriesToArray}
 });
 // attach schema
 Posts.attachSchema(Posts.schema);
@@ -47,9 +48,6 @@ export const postsIndex = new Index({
 Factory.define('post', Posts, {
   title: () => faker.lorem.sentence(),
   body: () => faker.lorem.paragraphs(),
-  userId: () => Random.id()
-});
-Factory.define('post.fromForm', Posts, {
-  title: () => faker.lorem.sentence(),
-  body: () => faker.lorem.paragraphs()
+  userId: () => Random.id(),
+  categories: () => Random.id()
 });
