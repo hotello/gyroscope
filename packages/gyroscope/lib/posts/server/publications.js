@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 
-import { permit } from '../../core/gyroscope.js';
+import { permit } from '../../core/settings.js';
 import { ID_FIELD } from '../../core/collections-helpers.js';
 import { Posts } from '../posts.js';
 

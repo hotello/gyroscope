@@ -1,7 +1,18 @@
-import { Gyroscope } from './lib/core/gyroscope.js';
-
-import './both.js';
+// register components
 import './lib/posts/client/posts.js';
 import './lib/categories/client/categories.js';
 
-export { Gyroscope };
+// exports
+import {
+  permit,
+  messages
+} from './lib/core/settings.js';
+import { Posts } from './lib/posts/posts.js';
+import { Categories } from './lib/categories/categories.js';
+
+export {
+  permit,
+  messages,
+  Posts,
+  Categories,
+};

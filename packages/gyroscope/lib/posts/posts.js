@@ -6,7 +6,7 @@ import { Random } from 'meteor/random';
 import { _ } from 'meteor/underscore';
 import faker from 'faker';
 
-import { permit } from '../core/gyroscope.js';
+import { permit } from '../core/settings.js';
 import {
   ID_FIELD_OPT,
   setCreatedAt,

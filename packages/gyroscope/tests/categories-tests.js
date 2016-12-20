@@ -5,7 +5,7 @@ import { Random } from 'meteor/random';
 import { Factory } from 'meteor/dburles:factory';
 import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 
-import { Gyroscope } from '../lib/core/gyroscope.js';
+import { Gyroscope } from '../lib/core/settings.js';
 import { Categories, categoriesIndex } from '../lib/categories/categories.js';
 import {
   insert,

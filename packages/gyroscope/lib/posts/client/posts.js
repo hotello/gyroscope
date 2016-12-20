@@ -1,7 +1,7 @@
 import { Template } from 'meteor/templating';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
-import { messages } from '../../core/gyroscope.js';
+import { messages } from '../../core/settings.js';
 import { Posts, postsIndex } from '../posts.js';
 import { POSTS_METHODS_SCHEMA, insert } from '../methods.js';
 import { ID_FIELD } from '../../core/collections-helpers.js';

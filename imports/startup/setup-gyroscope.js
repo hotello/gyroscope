@@ -1,8 +1,11 @@
-import { Gyroscope } from 'meteor/hotello:gyroscope';
+import {
+  permit,
+  messages
+} from 'meteor/hotello:gyroscope';
 
 const always = () => true;
 
-Gyroscope.permit.setPermissions({
+permit.set({
   'posts.insert': always,
   'posts.update': always,
   'posts.remove': always,
@@ -13,6 +16,6 @@ Gyroscope.permit.setPermissions({
   'categories.remove': always,
 });
 
-Gyroscope.messages.setMessages({
+messages.set({
   'posts.loadMore': 'Carega carega!!!'
 });

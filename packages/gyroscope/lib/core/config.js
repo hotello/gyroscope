@@ -18,5 +18,11 @@ export const config = {
 
   messages: {
     'posts.loadMore': 'Load more posts...'
+  },
+
+  notifications: {
+    'posts.new': function(data) {
+      console.log(data);
+    }
   }
 };

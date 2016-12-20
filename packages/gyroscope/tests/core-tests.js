@@ -1,66 +1,74 @@
 import { assert } from 'meteor/practicalmeteor:chai';
 
-import { Gyroscope } from '../lib/core/gyroscope.js';
+import { Dict } from '../lib/core/dict.js';
+import { StringsDict } from '../lib/core/strings-dict.js';
+import { FunctionsDict } from '../lib/core/functions-dict.js';
+import { Permit } from '../lib/core/permit.js';
 
 describe('core', function() {
-  describe('permit', function() {
-    beforeEach(function() {
-      Gyroscope.permit.setPermissions({
-        //does override defaults?
-        'posts.search': () => false,
-        'test.fn': () => true
-      });
+  describe('dict', function() {
+    const dict = new Dict({
+      'test.pair': true
     });
 
-    it('should set permissions', function() {
-      assert.doesNotThrow(function() {
-        Gyroscope.permit.setPermissions({'test.throws': new Function});
-      }, Error);
+    it('should set pairs', function() {
       assert.throws(function() {
-        Gyroscope.permit.setPermissions(null);
+        dict.set(null);
       }, Error);
-      assert.throws(function() {
-        Gyroscope.permit.setPermissions({'test.throws': true});
-      }, Error);
+      assert.equal(dict.pairs['test.pair'], true);
     });
 
-    it('should get permissions', function() {
-      assert.isFalse(Gyroscope.permit.toDo(null, 'posts.search'));
-      assert.isTrue(Gyroscope.permit.notToDo(null, 'posts.search'));
-      assert.isTrue(Gyroscope.permit.toDo(null, 'test.fn'));
-
+    it('should get pairs', function() {
       assert.throws(function() {
-        Gyroscope.permit.toDo('false_id', 'test.fn');
+        dict.get(false);
       }, Error);
       assert.throws(function() {
-        Gyroscope.permit.toDo(null, 'test.notExising');
+        dict.get('test.notExising');
       }, Error);
+      assert.equal(dict.get('test.pair'), true);
     });
   });
 
-  describe('messages', function() {
-    beforeEach(function() {
-      Gyroscope.messages.setMessages({
-        'test.message': 'test'
-      });
+  describe('strings dict', function() {
+    it('should set only strings', function() {
+      const stringsDict = new StringsDict({});
+      assert.doesNotThrow(function() {
+        stringsDict.set({
+          'test.string': new String()
+        });
+      }, Error);
+      assert.throws(function() {
+        stringsDict.set({'test.string': false});
+      }, Error);
+      assert.isString(stringsDict.pairs['test.string']);
     });
-    it('should set messages', function() {
-      assert.throws(function() {
-        Gyroscope.messages.setMessages(null);
+  });
+
+  describe('functions dict', function() {
+    it('should set only functions', function() {
+      const functionsDict = new FunctionsDict({});
+      assert.doesNotThrow(function() {
+        functionsDict.set({
+          'test.function': new Function()
+        });
       }, Error);
       assert.throws(function() {
-        Gyroscope.messages.setMessages({'test.message': false});
+        functionsDict.set({'test.function': false});
       }, Error);
-      assert.equal(Gyroscope.messages.messages['test.message'], 'test');
+      assert.isFunction(functionsDict.pairs['test.function']);
+    });
+  });
+
+  describe('permit', function() {
+    const permit = new Permit({
+      'test.fn': () => true
     });
 
-    it('should get messages', function() {
-      assert.equal(Gyroscope.messages.get('test.message'), 'test');
+    it('should check permissions', function() {
+      assert.isTrue(permit.toDo(null, 'test.fn'));
+      assert.isFalse(permit.notToDo(null, 'test.fn'));
       assert.throws(function() {
-        Gyroscope.messages.get(false);
-      }, Error);
-      assert.doesNotThrow(function() {
-        Gyroscope.messages.get('test.notExising');
+        permit.toDo('false_id', 'test.fn');
       }, Error);
     });
   });

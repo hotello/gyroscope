@@ -5,7 +5,7 @@ import { Random } from 'meteor/random';
 import { Factory } from 'meteor/dburles:factory';
 import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 
-import { Gyroscope } from '../lib/core/gyroscope.js';
+import { permit } from '../lib/core/settings.js';
 import { Posts, postsIndex } from '../lib/posts/posts.js';
 import {
   insert,
@@ -103,7 +103,7 @@ describe('posts', function() {
 
     if (Meteor.isServer) {
       it('should search for posts by text', function() {
-        Gyroscope.permit.setPermissions({
+        permit.set({
           'posts.search': () => true,
         });
 

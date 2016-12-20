@@ -28,12 +28,19 @@ Package.onUse(function(api) {
 
     'aldeed:simple-schema@1.5.3',
     'aldeed:collection2@2.10.0',
+    'dburles:collection-helpers@1.1.0',
     'dburles:factory@1.1.0',
     'aldeed:autoform@5.8.1',
     'mdg:validated-method@1.1.0',
 
     'easy:search@2.1.4',
+
+    'meteorhacks:ssr@2.2.0'
   ]);
+
+  api.addAssets([
+    'email-templates/default.html'
+  ], 'server');
 
   api.mainModule('client.js', 'client');
   api.mainModule('server.js', 'server');
@@ -53,6 +60,7 @@ Package.onTest(function(api) {
     'tests/tests-helpers.js',
     'tests/core-tests.js',
     'tests/posts-tests.js',
-    'tests/categories-tests.js'
+    'tests/categories-tests.js',
+    'tests/rooms-tests.js'
   ]);
 });

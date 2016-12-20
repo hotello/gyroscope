@@ -19,6 +19,7 @@ caching-html-compiler@1.0.7
 callback-hook@1.0.10
 check@1.2.4
 coffeescript@1.0.17
+dburles:collection-helpers@1.1.0
 dburles:factory@1.1.0
 ddp@1.2.5
 ddp-client@1.2.9
@@ -49,6 +50,7 @@ mdg:validated-method@1.1.0
 mdg:validation-error@0.2.0
 meteor@1.6.0
 meteor-base@1.0.4
+meteorhacks:ssr@2.2.0
 minifier-css@1.2.15
 minifier-js@1.2.15
 minimongo@1.0.19

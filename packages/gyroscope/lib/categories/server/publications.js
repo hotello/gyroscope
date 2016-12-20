@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 
-import { permit } from '../../core/gyroscope.js';
+import { permit } from '../../core/settings.js';
 import { ID_FIELD } from '../../core/collections-helpers.js';
 import { Categories } from '../categories.js';
 
@@ -13,8 +13,6 @@ Meteor.publish('categories.all', function() {
 });
 
 Meteor.publish('categories.single', function(categoryId) {
-  console.log(categoryId);
-
   new SimpleSchema({
     categoryId: ID_FIELD
   }).validate({ categoryId });
