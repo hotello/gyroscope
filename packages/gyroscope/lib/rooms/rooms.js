@@ -19,7 +19,7 @@ Rooms.deny({
 // generate schema
 Rooms.schema = new SimpleSchema({
   ownerId: ID_FIELD,
-  users: {type: [String], regEx: SimpleSchema.RegEx.Id},
+  users: {type: [String], regEx: SimpleSchema.RegEx.Id, optional: true},
   subscribers: {type: [String], regEx: SimpleSchema.RegEx.Id, optional: true}
 });
 // attach schema

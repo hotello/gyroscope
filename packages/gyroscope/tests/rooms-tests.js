@@ -7,6 +7,7 @@ import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 
 import { notifications } from '../lib/core/settings.js';
 import { Rooms } from '../lib/rooms/rooms.js';
+import { Categories } from '../lib/categories/categories.js';
 
 describe('rooms', function() {
   describe('collection', function() {
@@ -56,6 +57,36 @@ describe('rooms', function() {
     }
   });
 
+  describe('associations', function() {
+    if (Meteor.isServer) {
+      before(function() {
+        notifications.set({
+          'test.notification': new Function()
+        });
+      });
+      beforeEach(function() {
+        Rooms.remove({});
+        Categories.remove({});
+      });
+
+      it('should get a category room and, if not existing, create it', function () {
+        const category = Factory.create('category');
+        // should create and get the same room
+        assert.deepEqual(category.room(), category.room());
+      });
+
+      it('should add a subscriber to a category room', function() {
+        const category = Factory.create('category');
+        assert.equal(category.addSubscriber(Random.id()), 1);
+      });
+
+      it('should remove a subscriber from a category room', function() {
+        const category = Factory.create('category');
+        assert.equal(category.removeSubscriber(Random.id()), 1);
+      });
+    }
+  });
+
   describe('notifications', function() {
     if (Meteor.isServer) {
       before(function() {
@@ -65,11 +96,19 @@ describe('rooms', function() {
       });
       beforeEach(function() {
         Rooms.remove({});
+        Categories.remove({});
       });
 
-      it('should notify users in a room', function() {
+      it('should notify subscribers in a room', function() {
         const room = Factory.create('room');
         assert.isArray(room.notify('test.notification', {}));
+      });
+
+      it('should notify subscribers of a category', function() {
+        const category = Factory.create('category');
+        // notifications need subscribers
+        category.room().addSubscriber(Random.id());
+        assert.isArray(category.notify('test.notification', {}));
       });
     }
   });

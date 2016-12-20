@@ -12,6 +12,7 @@ import {
   update,
   remove
 } from '../lib/posts/methods.js';
+import { Categories } from '../lib/categories/categories.js';
 
 Meteor.methods({
   'test.resetPosts': () => Posts.remove({}),
@@ -22,6 +23,7 @@ describe('posts', function() {
     if (Meteor.isServer) {
       beforeEach(function() {
         Posts.remove({});
+        Categories.remove({});
       });
 
       it('should insert post with auto values', function() {
@@ -45,6 +47,13 @@ describe('posts', function() {
         // Posts.upsert(post._id, {$set: Factory.tree('post')});
         // assert.equal(post.createdAt.getTime(), Posts.findOne(post._id).createdAt.getTime());
         // assert.notEqual(post.slug, Posts.findOne(post._id).slug);
+      });
+
+      it('should insert post with existing category', function() {
+        const category = Factory.create('category');
+        // add subscribers to category
+        category.addSubscriber(Random.id());
+        const post = Factory.create('post', {categories: [category._id]});
       });
     }
   });

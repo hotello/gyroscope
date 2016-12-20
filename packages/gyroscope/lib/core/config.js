@@ -21,7 +21,7 @@ export const config = {
   },
 
   notifications: {
-    'posts.new': function(data) {
+    'posts.insert': function(data) {
       console.log(data);
     }
   }

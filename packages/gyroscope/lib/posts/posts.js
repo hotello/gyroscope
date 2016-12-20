@@ -13,9 +13,22 @@ import {
   setSlugFromTitle,
   categoriesToArray
 } from '../core/collections-helpers.js';
+import { Categories } from '../categories/categories.js';
 
+class PostsCollection extends Mongo.Collection {
+  insert(post, callback) {
+    if (_.has(post, 'categories')) {
+      _.each(post.categories, (categoryId) => {
+        const category = Categories.findOne(categoryId);
+        if (category) category.notify('posts.insert', { post });
+      });
+    }
+
+    return super.insert(post, callback);
+  }
+}
 // create collection
-export const Posts = new Mongo.Collection('posts');
+export const Posts = new PostsCollection('posts');
 
 // deny everything
 Posts.deny({

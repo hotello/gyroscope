@@ -1,6 +1,7 @@
 // at startup
 import './lib/core/seed.js';
 import './lib/rooms/notify.js';
+import './lib/rooms/notification-helpers.js';
 
 // register api
 import './lib/posts/server/publications.js';
