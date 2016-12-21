@@ -49,6 +49,14 @@ Posts.schema = new SimpleSchema({
 // attach schema
 Posts.attachSchema(Posts.schema);
 
+// posts helpers
+Posts.helpers({
+  // get all post's categories objects
+  getCategories() {
+    return Categories.find({_id: {$in: this.categories}});
+  }
+});
+
 // init search with a function, for dynamic setup
 export const postsIndex = new Index({
   collection: Posts,

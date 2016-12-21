@@ -22,7 +22,7 @@ export const config = {
 
   notifications: {
     'posts.insert': function(data) {
-      console.log(data);
+      console.log(`Notified post.insert for: ${data.post.title}`);
     }
   }
 };

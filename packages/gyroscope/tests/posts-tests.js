@@ -55,38 +55,53 @@ describe('posts', function() {
         category.addSubscriber(Random.id());
         const post = Factory.create('post', {categories: [category._id]});
       });
+
+      describe('helpers', function() {
+        beforeEach(function() {
+          Categories.remove({});
+          Posts.remove({});
+        });
+
+        it('should get post categories', function() {
+          const category = Factory.create('category');
+          const post = Factory.create('post', {categories: [category._id]});
+          assert.equal(post.getCategories().count(), 1);
+        });
+      });
     }
   });
 
   describe('methods', function() {
-    const userId = Random.id();
-    let methodInvocation = {userId};
+    if (Meteor.isServer) {
+      const userId = Random.id();
+      let methodInvocation = {userId};
 
-    beforeEach(function(done) {
-      Meteor.call('test.resetPosts', done);
-    });
+      beforeEach(function(done) {
+        Meteor.call('test.resetPosts', done);
+      });
 
-    it('should insert posts', function() {
-      const post = Factory.tree('post.fromForm');
-      const result = insert._execute(methodInvocation, post);
+      it('should insert posts', function() {
+        const post = Factory.tree('post.fromForm');
+        const result = insert._execute(methodInvocation, post);
 
-      assert.isString(result);
-    });
+        assert.isString(result);
+      });
 
-    it('should update posts', function() {
-      const postId = Factory.create('post')._id;
-      const post = Factory.tree('post.fromForm');
-      const result = update._execute(methodInvocation, {_id: postId, modifier: {$set: post}});
+      it('should update posts', function() {
+        const postId = Factory.create('post')._id;
+        const post = Factory.tree('post.fromForm');
+        const result = update._execute(methodInvocation, {_id: postId, modifier: {$set: post}});
 
-      assert.equal(result, 1);
-    });
+        assert.equal(result, 1);
+      });
 
-    it('should remove posts', function() {
-      const postId = Factory.create('post')._id;
-      const result = remove._execute(methodInvocation, { postId });
+      it('should remove posts', function() {
+        const postId = Factory.create('post')._id;
+        const result = remove._execute(methodInvocation, { postId });
 
-      assert.equal(result, 1);
-    });
+        assert.equal(result, 1);
+      });
+    }
   });
 
   describe('publications', function() {

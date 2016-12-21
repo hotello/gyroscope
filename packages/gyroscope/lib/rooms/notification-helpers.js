@@ -18,6 +18,9 @@ Categories.helpers({
   },
   // notify subscribers in category's room
   notify(notification, data) {
-    return this.room().notify(notification, data);
+    const room = this.room();
+    // do not notify if category's room has no subscribers
+    if (!_.has(room, 'subscribers') || room.subscribers.length === 0) return false;
+    return room.notify(notification, data);
   }
 });
