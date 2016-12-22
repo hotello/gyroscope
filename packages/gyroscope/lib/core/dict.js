@@ -3,7 +3,7 @@ import { _ } from 'meteor/underscore';
 export class Dict {
   /**
    * Sets up the dictionary
-   * @param {Object} key/value pairs for the dictionary
+   * @param {Object} pairs key/value pairs for the dictionary
    */
   constructor(pairs) {
     this.pairs = {};

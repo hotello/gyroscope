@@ -1,9 +1,11 @@
 import { assert } from 'meteor/practicalmeteor:chai';
+import { _ } from 'meteor/underscore';
 
 import { Dict } from '../lib/core/dict.js';
 import { StringsDict } from '../lib/core/strings-dict.js';
 import { FunctionsDict } from '../lib/core/functions-dict.js';
 import { Permit } from '../lib/core/permit.js';
+import { Hooks } from '../lib/core/hooks.js';
 
 describe('core', function() {
   describe('dict', function() {
@@ -70,6 +72,40 @@ describe('core', function() {
       assert.throws(function() {
         permit.toDo('false_id', 'test.fn');
       }, Error);
+    });
+  });
+
+  describe('hooks', function() {
+    const hooks = new Hooks({});
+
+    beforeEach(function() {
+      hooks.pairs = {};
+    });
+
+    it('should accept only arrays of functions', function() {
+      assert.doesNotThrow(function() {
+        hooks.set({'test.hooks': [new Function]});
+      }, Error);
+      assert.throws(function() {
+        hooks.set({'test.hooks': new Function});
+      }, Error);
+    });
+
+    it('should setup a group of callbacks', function() {
+      hooks._setup('test.hooks');
+      assert.isArray(hooks.pairs['test.hooks']);
+      assert.equal(hooks.pairs['test.hooks'].length, 0);
+    });
+
+    it('should add a callback to an array of callbacks', function() {
+      hooks.add('test.hooks', new Function);
+      assert.isFunction(hooks.get('test.hooks')[0]);
+    });
+
+    it('should run all the callbacks and return', function() {
+      const fn = (arg) => arg;
+      _.times(3, () => { hooks.add('test.hooks', fn); });
+      assert.equal(hooks.run('test.hooks', 'test'), 'test');
     });
   });
 });
