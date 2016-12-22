@@ -1,3 +1,5 @@
+import { _ } from 'meteor/underscore';
+
 export class Dict {
   /**
    * Sets up the dictionary
@@ -20,9 +22,9 @@ export class Dict {
     if (!_.isString(key)) throw new Error('dict.get: must provide a String.');
     // find value in the dict
     value = this.pairs[key];
-    if (!value) throw Error('dict.get: value not found.');
-
-    return this.pairs[key];
+    if (_.isUndefined(value)) throw Error('dict.get: value not found.');
+    // return the value
+    return value;
   }
 
   /**

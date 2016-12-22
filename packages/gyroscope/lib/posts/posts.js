@@ -11,20 +11,37 @@ import {
   ID_FIELD_OPT,
   setCreatedAt,
   setSlugFromTitle,
-  categoriesToArray
+  toArray
 } from '../core/collections-helpers.js';
 import { Categories } from '../categories/categories.js';
 
 class PostsCollection extends Mongo.Collection {
   insert(post, callback) {
-    if (_.has(post, 'categories')) {
+    let postId;
+    // transform post's categories to array
+    post.categories = toArray(post.categories);
+    // insert post
+    postId = super.insert(post, callback);
+    // find inserted post
+    post = Posts.findOne(postId);
+    // notify all users subscribed to post's categories
+    if (Meteor.isServer && _.has(post, 'categories')) {
       _.each(post.categories, (categoryId) => {
         const category = Categories.findOne(categoryId);
         if (category) category.notify('posts.insert', { post });
       });
     }
+    // return the post's _id as default
+    return postId;
+  }
 
-    return super.insert(post, callback);
+  update(selector, modifier, options, callback) {
+    // transform post's categories to array
+    if (_.has(modifier, '$set') && _.has(modifier.$set, 'categories')) {
+      modifier.$set.categories = toArray(modifier.$set.categories);
+    }
+    // return update result
+    return super.update(selector, modifier, options, callback);
   }
 }
 // create collection
@@ -44,7 +61,7 @@ Posts.schema = new SimpleSchema({
   slug: {type: String, unique: true, autoValue: setSlugFromTitle},
   body: {type: String, max: 3000},
   userId: ID_FIELD_OPT,
-  categories: {type: [String], regEx: SimpleSchema.RegEx.Id, optional: true, autoValue: categoriesToArray}
+  categories: {type: [String], regEx: SimpleSchema.RegEx.Id, optional: true}
 });
 // attach schema
 Posts.attachSchema(Posts.schema);

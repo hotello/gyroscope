@@ -11,6 +11,7 @@ import './lib/categories/methods.js';
 
 // exports
 import {
+  general,
   permit,
   messages,
   notifications
@@ -18,12 +19,15 @@ import {
 import { Posts } from './lib/posts/posts.js';
 import { Categories } from './lib/categories/categories.js';
 import { Rooms } from './lib/rooms/rooms.js';
+import { sendEmail } from './lib/rooms/send-email-notification.js';
 
 export {
+  general,
   permit,
   messages,
   notifications,
   Posts,
   Categories,
-  Rooms
+  Rooms,
+  sendEmail
 };

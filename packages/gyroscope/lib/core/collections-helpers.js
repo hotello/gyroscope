@@ -31,15 +31,13 @@ export const setSlugFromName = function() {
   return slug(this.field('name').value);
 };
 
-// transform field to array
-export const categoriesToArray = function() {
-  const categories = this.field('categories').value;
-
-  if (_.isArray(categories)) {
-    return categories;
-  } else if (_.isString(categories)) {
-    return [categories];
+// transform to array
+export const toArray = function(value) {
+  if (_.isArray(value)) {
+    return value;
+  } else if (_.isString(value)) {
+    return [value];
   } else {
-    this.unset();
+    return [];
   }
 }

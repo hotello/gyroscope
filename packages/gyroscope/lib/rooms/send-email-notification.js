@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Email } from 'meteor/email';
-import templateToHTML from './template-to-html.js';
+import { templateToHTML } from './template-to-html.js';
 
 export const sendEmail = (template, { to, from, replyTo, subject, attachments }, payload) => {
   const email = {

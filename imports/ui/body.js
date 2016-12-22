@@ -1,11 +1,17 @@
-import { Gyroscope } from 'meteor/hotello:gyroscope';
+import { Posts, Categories } from 'meteor/hotello:gyroscope';
 
 import './body.html';
 
 /**
  * body
  */
+Template.body.onCreated(function() {
+  this.autorun(() => {
+    this.subscribe('posts.random');
+    this.subscribe('categories.random');
+  });
+});
 Template.body.helpers({
-  postId: () => 'LgAwzy2qfkbScPC4M',
-  categoryId: () => '9aZfW8sqKNvsoDJ2K'
+  post: () => Posts.findOne(),
+  category: () => Categories.findOne()
 });

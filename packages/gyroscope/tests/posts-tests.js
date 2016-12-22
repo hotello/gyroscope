@@ -43,7 +43,7 @@ describe('posts', function() {
         Posts.update(post._id, {$set: Factory.tree('post')});
         assert.equal(post.createdAt.getTime(), Posts.findOne(post._id).createdAt.getTime());
         assert.notEqual(post.slug, Posts.findOne(post._id).slug);
-        // check upsert WARNING: we have a bug in aldeed:collection2-core, we can't upsert
+        // check upsert
         // Posts.upsert(post._id, {$set: Factory.tree('post')});
         // assert.equal(post.createdAt.getTime(), Posts.findOne(post._id).createdAt.getTime());
         // assert.notEqual(post.slug, Posts.findOne(post._id).slug);
@@ -72,36 +72,36 @@ describe('posts', function() {
   });
 
   describe('methods', function() {
-    if (Meteor.isServer) {
-      const userId = Random.id();
-      let methodInvocation = {userId};
+    const userId = Random.id();
+    let methodInvocation = {userId};
 
-      beforeEach(function(done) {
-        Meteor.call('test.resetPosts', done);
-      });
+    beforeEach(function() {
+      if (Meteor.isServer) {
+        Posts.remove({});
+      }
+    });
 
-      it('should insert posts', function() {
-        const post = Factory.tree('post.fromForm');
-        const result = insert._execute(methodInvocation, post);
+    it('should insert posts', function() {
+      const post = Factory.tree('post.fromForm');
+      const result = insert._execute(methodInvocation, post);
 
-        assert.isString(result);
-      });
+      assert.isString(result);
+    });
 
-      it('should update posts', function() {
-        const postId = Factory.create('post')._id;
-        const post = Factory.tree('post.fromForm');
-        const result = update._execute(methodInvocation, {_id: postId, modifier: {$set: post}});
+    it('should update posts', function() {
+      const postId = Factory.create('post')._id;
+      const post = Factory.tree('post.fromForm');
+      const result = update._execute(methodInvocation, {_id: postId, modifier: {$set: post}});
 
-        assert.equal(result, 1);
-      });
+      assert.equal(result, 1);
+    });
 
-      it('should remove posts', function() {
-        const postId = Factory.create('post')._id;
-        const result = remove._execute(methodInvocation, { postId });
+    it('should remove posts', function() {
+      const postId = Factory.create('post')._id;
+      const result = remove._execute(methodInvocation, { postId });
 
-        assert.equal(result, 1);
-      });
-    }
+      assert.equal(result, 1);
+    });
   });
 
   describe('publications', function() {

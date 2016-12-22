@@ -25,6 +25,7 @@ Package.onUse(function(api) {
     'standard-minifier-js@1.2.1',
     'es5-shim@4.6.15',
     'ecmascript@0.6.1',
+    'email@1.1.18',
 
     'aldeed:simple-schema@1.5.3',
     'aldeed:collection2@2.10.0',
@@ -39,7 +40,7 @@ Package.onUse(function(api) {
   ]);
 
   api.addAssets([
-    'email-templates/default.html'
+    'assets/email-templates/default.html'
   ], 'server');
 
   api.mainModule('client.js', 'client');

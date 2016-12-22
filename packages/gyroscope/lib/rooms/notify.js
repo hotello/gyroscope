@@ -3,15 +3,17 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { notifications } from '../core/settings.js';
 import { Rooms } from './rooms.js';
 
-const notify = function(users, notification, data) {
+const notify = function(userIds, notification, data) {
   new SimpleSchema({
-    users: {type: [String], regEx: SimpleSchema.RegEx.Id},
+    userIds: {type: [String], regEx: SimpleSchema.RegEx.Id},
     notification: {type: String},
     data: {type: Object, blackbox: true}
-  }).validate({ users, notification, data });
+  }).validate({ userIds, notification, data });
   // notify each user
-  _.each(users, (user) => {
+  _.each(userIds, (userId) => {
     const notificationFn = notifications.get(notification);
+    // set userId in data
+    data.userId = userId;
     // run the notification with data
     notificationFn(data);
   });

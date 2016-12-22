@@ -2,6 +2,11 @@ const withUser = (userId, data) => !!userId;
 const noUser = (userId, data) => true;
 
 export const config = {
+  general: {
+    'assets': false,
+    'assets.emailTemplates': 'assets/email-templates'
+  },
+
   permit: {
     'posts.insert': withUser,
     'posts.update': withUser,
