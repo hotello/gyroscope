@@ -104,6 +104,7 @@ describe('core', function() {
 
     it('should run all the callbacks and return', function() {
       const fn = (arg) => arg;
+      assert.equal(hooks.run('test.hooks', 'noHooks'), 'noHooks');
       _.times(3, () => { hooks.add('test.hooks', fn); });
       assert.equal(hooks.run('test.hooks', 'test'), 'test');
     });

@@ -19,6 +19,8 @@ export class Hooks extends Dict {
   }
   // runs a group of hooks
   run(key, data) {
+    // check for
+    if (!_.isArray(this.pairs[key]) || this.pairs[key].length === 0) return data;
     // composes functions in the group, calls them with data and returns
     return _.compose().apply(this, this.get(key))(data);
   }

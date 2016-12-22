@@ -2,6 +2,7 @@
 import './lib/core/seed.js';
 import './lib/rooms/notify.js';
 import './lib/rooms/notification-helpers.js';
+import './lib/rooms/hooks.js';
 
 // register api
 import './lib/posts/server/publications.js';

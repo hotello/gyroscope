@@ -6,7 +6,7 @@ import { Random } from 'meteor/random';
 import { _ } from 'meteor/underscore';
 import faker from 'faker';
 
-import { permit } from '../core/settings.js';
+import { permit, hooks } from '../core/settings.js';
 import {
   ID_FIELD_OPT,
   setCreatedAt,
@@ -24,13 +24,8 @@ class PostsCollection extends Mongo.Collection {
     postId = super.insert(post, callback);
     // find inserted post
     post = Posts.findOne(postId);
-    // notify all users subscribed to post's categories
-    if (Meteor.isServer && _.has(post, 'categories')) {
-      _.each(post.categories, (categoryId) => {
-        const category = Categories.findOne(categoryId);
-        if (category) category.notify('posts.insert', { post });
-      });
-    }
+    // run posts' after hooks
+    hooks.run('posts.insert.after', post);
     // return the post's _id as default
     return postId;
   }
