@@ -1,7 +1,8 @@
 import { Template } from 'meteor/templating';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { AutoForm } from 'meteor/aldeed:autoform';
 
-import { messages } from '../../core/settings.js';
+import { messages, hooks } from '../../core/settings.js';
 import { Posts, postsIndex } from '../posts.js';
 import { POSTS_METHODS_SCHEMA, insert } from '../methods.js';
 import { ID_FIELD } from '../../core/collections-helpers.js';
@@ -50,6 +51,14 @@ Template.Posts_form_insert.helpers({
     return categoryId ? {categories: categoryId} : {};
   }
 });
+AutoForm.addHooks('Posts_form_insert', {
+  onSuccess: function(formType, result) {
+    hooks.run('posts.forms.insert.onSuccess', result);
+  },
+  onError: function(formType, error) {
+    hooks.run('posts.forms.insert.onError', error);
+  }
+});
 
 /**
  * Posts_form_update
@@ -74,5 +83,13 @@ Template.Posts_form_update.helpers({
     const instance = Template.instance();
 
     return Posts.findOne(instance.getPostId());
+  }
+});
+AutoForm.addHooks('Posts_form_update', {
+  onSuccess: function(formType, result) {
+    hooks.run('posts.forms.update.onSuccess', result);
+  },
+  onError: function(formType, error) {
+    hooks.run('posts.forms.update.onError', error);
   }
 });
