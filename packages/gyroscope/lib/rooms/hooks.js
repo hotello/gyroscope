@@ -13,13 +13,15 @@ hooks.add('posts.insert.after', function(post) {
       if (category) category.notify('posts.insert', { post });
     });
   }
-  // add user to post's subscribers
-  if (_.has(post, 'userId')) post.addSubscriber(post.userId);
+  // remember to always return on hooks
+  return post;
 });
 // add post's user to subscribers on post insert
-// hooks.add('posts.insert.after', function(post) {
-//   if (_.has(post, 'userId')) post.addSubscriber(post.userId);
-// });
+hooks.add('posts.insert.after', function(post) {
+  if (_.has(post, 'userId')) post.addSubscriber(post.userId);
+  // remember to always return on hooks
+  return post;
+});
 
 // add notification on comment insert and add user to post's subscribers
 hooks.add('comments.insert.after', function(comment) {
@@ -28,4 +30,6 @@ hooks.add('comments.insert.after', function(comment) {
   if (post) post.notify('comments.insert', { comment });
   // add user to post's subscribers
   if (post && _.has(comment, 'postId')) post.addSubscriber(comment.userId);
+  // remember to always return on hooks
+  return comment;
 });

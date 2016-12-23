@@ -18,18 +18,15 @@ export class Hooks extends Dict {
     this.pairs[key].push(fn);
   }
   // runs a group of hooks
-  run() {
-    const key = arguments[0]; // first argument is the group key
-    const data = arguments[1]; // second argument is the data passed
-    const args = Array.prototype.slice.call(arguments).slice(2); // other arguments are passed
+  run(key, data) {
     // if key is not found return data
     if(!this.pairs[key]) return data;
     // if key exists get the array of functions
     const hooks = this.get(key);
     // iterate with all functions
     return hooks.reduce(function(result, hook) {
-      const newArguments = [result].concat(args);
-      return hook.apply(this, newArguments);
+      if (_.isUndefined(result)) throw new Error('hooks.run: all functions must return something!');
+      return hook(result);
     }, data);
   }
   // setup a group of hooks
