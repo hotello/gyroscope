@@ -62,6 +62,7 @@ Package.onTest(function(api) {
     'tests/core-tests.js',
     'tests/posts-tests.js',
     'tests/categories-tests.js',
-    'tests/rooms-tests.js'
+    'tests/rooms-tests.js',
+    'tests/comments-tests.js'
   ]);
 });

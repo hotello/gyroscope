@@ -1,0 +1,26 @@
+<template name="Comments_list">
+  {{#each comment in comments}}
+    {{> Template.contentBlock comment=comment}}
+  {{/each}}
+</template>
+
+<template name="Comments_form_insert">
+  {{> quickForm
+    schema=schema
+    id="Comments_form_insert"
+    doc=(prefill postId)
+    type="method"
+    meteormethod="comments.insert"
+  }}
+</template>
+
+<template name="Comments_form_update">
+  {{> quickForm
+    schema=schema
+    id="Comments_form_update"
+    doc=comment
+    type="method-update"
+    meteormethod="comments.update"
+    singleMethodArgument=true
+  }}
+</template>

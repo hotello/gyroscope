@@ -33,6 +33,19 @@
 
   <h3>List</h3>
   {{> categoriesList}}
+
+  <h2>Comments</h2>
+
+  <h3>Forms</h3>
+  {{#if Template.subscriptionsReady}}
+    {{> Comments_form_insert postId=post._id}}
+    {{> Comments_form_update commentId=comment._id}}
+  {{/if}}
+
+  <h3>List</h3>
+  {{#if Template.subscriptionsReady}}
+    {{> commentsList postId=post._id}}
+  {{/if}}
 </body>
 
 <template name="postsList">
@@ -49,6 +62,12 @@
   {{#Categories_list}}
     <p>{{category.name}}</p>
   {{/Categories_list}}
+</template>
+
+<template name="commentsList">
+  {{#Comments_list postId=postId}}
+    <p>{{comment.body}}</p>
+  {{/Comments_list}}
 </template>
 
 <template name="noResultsCustom">

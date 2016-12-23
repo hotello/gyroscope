@@ -2,6 +2,7 @@ import { Random } from 'meteor/random';
 import {
   Posts,
   Categories,
+  Comments,
   notifications,
   sendEmail,
   general
@@ -16,6 +17,13 @@ Meteor.publish('categories.random', function() {
   const category = categories.fetch()[0];
   if (!_.has(category.room(), 'subscribers')) category.addSubscriber(Random.id());
   return categories;
+});
+Meteor.publish('comments.random', function() {
+  const comments = Comments.find({}, {limit: 1});
+  const comment = comments.fetch()[0];
+  const post = Posts.findOne();
+  Comments.update(comment._id, {$set: {postId: post._id}});
+  return comments;
 });
 
 // pass enclosing app assets object to gyroscope package

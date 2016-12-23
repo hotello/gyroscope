@@ -18,7 +18,13 @@ export const config = {
     'categories.update': withUser,
     'categories.remove': withUser,
     'categories.publish.all': noUser,
-    'categories.publish.single': noUser
+    'categories.publish.single': noUser,
+
+    'comments.insert': withUser,
+    'comments.update': withUser,
+    'comments.remove': withUser,
+    'comments.publish.byPost': noUser,
+    'comments.publish.single': noUser
   },
 
   messages: {
