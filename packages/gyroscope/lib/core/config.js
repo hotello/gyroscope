@@ -33,7 +33,10 @@ export const config = {
 
   notifications: {
     'posts.insert': function(data) {
-      console.log(`Notified post.insert for: ${data.post.title}`);
+      console.log(`Notified posts.insert for: ${data.post.title}`);
+    },
+    'comments.insert': function(data) {
+      console.log(`Nofified comments.insert for: ${data.comment.body}`);
     }
   }
 };

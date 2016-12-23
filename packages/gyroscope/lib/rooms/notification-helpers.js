@@ -1,11 +1,13 @@
+import { Posts } from '../posts/posts.js';
 import { Categories } from '../categories/categories.js';
 import { Rooms } from './rooms.js';
 
-Categories.helpers({
-  // get category's room or create it
+export const withRoom = {
+  // get document's room or create it
   room() {
     const room = Rooms.findOne({ownerId: this._id});
     const newRoomId = room ? null : Rooms.insert({ownerId: this._id});
+    // return a new room or the existing one
     return newRoomId ? Rooms.findOne(newRoomId) : room;
   },
   // add subscriber to the category's room
@@ -13,7 +15,7 @@ Categories.helpers({
     return this.room().addSubscriber(userId);
   },
   // remove subscriber and user from category's room
-  removeSubscriber(userId) {
+  removeUser(userId) {
     return this.room().removeUser(userId);
   },
   // notify subscribers in category's room
@@ -21,6 +23,12 @@ Categories.helpers({
     const room = this.room();
     // do not notify if category's room has no subscribers
     if (!_.has(room, 'subscribers') || room.subscribers.length === 0) return false;
+    // run notification
     return room.notify(notification, data);
   }
-});
+};
+
+// add rooms to categories
+Categories.helpers(withRoom);
+// add rooms to posts
+Posts.helpers(withRoom);

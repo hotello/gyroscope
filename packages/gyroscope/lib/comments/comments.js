@@ -46,18 +46,13 @@ Comments.schema = new SimpleSchema({
 // attach schema
 Comments.attachSchema(Comments.schema);
 
-// comments helpers
-Comments.helpers({
-
-});
-
 // define factory generators for tests
 Factory.define('comment', Comments, {
-  body: () => faker.lorem.paragraphs(),
+  body: () => faker.lorem.sentence(),
   userId: () => Random.id(),
   postId: () => Random.id()
 });
 Factory.define('comment.fromForm', Comments, {
-  body: () => faker.lorem.paragraphs(),
+  body: () => faker.lorem.sentence(),
   postId: () => Random.id()
 });

@@ -40,20 +40,6 @@ describe('comments', function() {
         // assert.equal(comment.createdAt.getTime(), Comments.findOne(comment._id).createdAt.getTime());
         // assert.notEqual(comment.slug, Comments.findOne(comment._id).slug);
       });
-
-      it('should insert comment with existing category', function() {
-        const category = Factory.create('category');
-        // add subscribers to category
-        category.addSubscriber(Random.id());
-        const comment = Factory.create('comment', {categories: [category._id]});
-      });
-
-      describe('helpers', function() {
-        beforeEach(function() {
-          Posts.remove({});
-          Comments.remove({});
-        });
-      });
     }
   });
 

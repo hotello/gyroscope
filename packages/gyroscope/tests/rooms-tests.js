@@ -54,9 +54,27 @@ describe('rooms', function() {
         assert.equal(room.removeSubscriber(id), 1);
         assert.isUndefined(Rooms.findOne({users: {$in: [id]}, subscribers: {$in: [id]}}));
       });
+
+      describe('hooks', function() {
+        it('should add user to subscribers on post insert', function() {
+          const post = Factory.create('post');
+          // commenter should be added to post's subscribers
+          assert.include(post.room().subscribers, post.userId);
+        });
+
+        it('should insert comment on existing post, adding user to subscribers', function() {
+          const post = Factory.create('post');
+          const comment = Factory.create('comment', {postId: post._id});
+          // commenter should be added to post's subscribers
+          assert.include(post.room().subscribers, comment.userId);
+        });
+      });
     }
   });
 
+  /**
+   * These association tests refer to Categories, but any collection would work.
+   */
   describe('associations', function() {
     if (Meteor.isServer) {
       before(function() {
@@ -69,20 +87,20 @@ describe('rooms', function() {
         Categories.remove({});
       });
 
-      it('should get a category room and, if not existing, create it', function () {
+      it('should get a document\'s room and, if not existing, create it', function () {
         const category = Factory.create('category');
         // should create and get the same room
         assert.deepEqual(category.room(), category.room());
       });
 
-      it('should add a subscriber to a category room', function() {
+      it('should add a subscriber to a document\'s room', function() {
         const category = Factory.create('category');
         assert.equal(category.addSubscriber(Random.id()), 1);
       });
 
-      it('should remove a subscriber from a category room', function() {
+      it('should remove a user from a document\'s room', function() {
         const category = Factory.create('category');
-        assert.equal(category.removeSubscriber(Random.id()), 1);
+        assert.equal(category.removeUser(Random.id()), 1);
       });
     }
   });
@@ -109,6 +127,13 @@ describe('rooms', function() {
         // notifications need subscribers
         category.room().addSubscriber(Random.id());
         assert.isArray(category.notify('test.notification', {}));
+      });
+
+      it('should notify subscribers of a post', function() {
+        const post = Factory.create('post');
+        // notifications need subscribers
+        post.room().addSubscriber(Random.id());
+        assert.isArray(post.notify('test.notification', {}));
       });
     }
   });
