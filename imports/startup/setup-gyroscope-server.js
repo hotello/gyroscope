@@ -10,7 +10,10 @@ import {
 
 // some publications
 Meteor.publish('posts.random', function() {
-  return Posts.find({}, {limit: 1});
+  const posts = Posts.find({}, {limit: 1});
+  const post = posts.fetch()[0];
+  if (!_.has(post.room(), 'subscribers')) post.addSubscriber(Random.id());
+  return posts;
 });
 Meteor.publish('categories.random', function() {
   const categories = Categories.find({}, {limit: 1});
@@ -44,6 +47,21 @@ notifications.set({
       body: `A new post was created: ${data.post.title}`,
       callToAction: {
         url: `http://gyroscope-test.com/posts/${data.post._id}`,
+        label: 'Go to post'
+      }
+    });
+  },
+  'comments.insert': function(data) {
+    sendEmail('custom', {
+      // get user object from id with data.userId
+      to: `${data.userId}@user.com`,
+      from: 'test@gyroscope.com',
+      replyTo: 'test@gyroscope.com',
+      subject: 'New comment on Gyroscope Test App',
+    }, {
+      body: `A new comment was created: ${data.comment.body}`,
+      callToAction: {
+        url: `http://gyroscope-test.com/posts/${data.comment.postId}`,
         label: 'Go to post'
       }
     });
