@@ -1,18 +1,26 @@
 import { Meteor } from 'meteor/meteor';
+import { _ } from 'meteor/underscore';
 
 import { hooks } from '../core/settings.js';
 import { Categories } from '../categories/categories.js';
 import { Posts } from '../posts/posts.js';
 
-// add notification on post insert
-hooks.add('posts.insert.after', function(post) {
-  // notify all users subscribed to post's categories
+export const notifyPostOnComment = function(comment, post) {
+  return post.notify('comments.insert', { comment, without: [post.userId] });
+};
+export const notifyCategoryOnPost = function(post) {
   if (_.has(post, 'categories')) {
     _.each(post.categories, (categoryId) => {
       const category = Categories.findOne(categoryId);
       if (category) category.notify('posts.insert', { post });
     });
   }
+};
+
+// add notification on post insert
+hooks.add('posts.insert.after', function(post) {
+  // notify all users subscribed to post's categories
+  notifyCategoryOnPost(post);
   // remember to always return on hooks
   return post;
 });
@@ -27,7 +35,7 @@ hooks.add('posts.insert.after', function(post) {
 hooks.add('comments.insert.after', function(comment) {
   const post = Posts.findOne(comment.postId);
   // notify post's room
-  if (post) post.notify('comments.insert', { comment });
+  if (post) notifyPostOnComment(comment, post);
   // add user to post's subscribers
   if (post && _.has(comment, 'postId')) post.addSubscriber(comment.userId);
   // remember to always return on hooks

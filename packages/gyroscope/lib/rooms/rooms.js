@@ -32,7 +32,7 @@ Rooms.helpers({
   // add a user by its _id
   addUser(userId) {
     checkUserId(userId);
-    return Rooms.update(this._id, {$push: {users: userId}});
+    return Rooms.update(this._id, {$addToSet: {users: userId}});
   },
 
   // remove user by its _id
@@ -46,7 +46,7 @@ Rooms.helpers({
   addSubscriber(userId) {
     checkUserId(userId);
     // ensure is also added to users
-    return Rooms.update(this._id, {$push: {subscribers: userId, users: userId}});
+    return Rooms.update(this._id, {$addToSet: {subscribers: userId, users: userId}});
   },
 
   // remove subscriber by its _id

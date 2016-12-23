@@ -14,10 +14,6 @@ import {
 } from '../lib/posts/methods.js';
 import { Categories } from '../lib/categories/categories.js';
 
-Meteor.methods({
-  'test.resetPosts': () => Posts.remove({}),
-});
-
 describe('posts', function() {
   describe('collection', function() {
     if (Meteor.isServer) {
@@ -47,13 +43,6 @@ describe('posts', function() {
         // Posts.upsert(post._id, {$set: Factory.tree('post')});
         // assert.equal(post.createdAt.getTime(), Posts.findOne(post._id).createdAt.getTime());
         // assert.notEqual(post.slug, Posts.findOne(post._id).slug);
-      });
-
-      it('should insert post with existing category', function() {
-        const category = Factory.create('category');
-        // add subscribers to category
-        category.addSubscriber(Random.id());
-        const post = Factory.create('post', {categories: [category._id]});
       });
 
       describe('helpers', function() {
@@ -121,11 +110,11 @@ describe('posts', function() {
   describe('search', function() {
     const index = postsIndex;
 
-    beforeEach(function(done) {
-      Meteor.call('test.resetPosts', done);
-    });
-
     if (Meteor.isServer) {
+      beforeEach(function() {
+        Posts.remove({});
+      });
+
       it('should search for posts by text', function() {
         permit.set({
           'posts.search': () => true,

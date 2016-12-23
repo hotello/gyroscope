@@ -1,4 +1,5 @@
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { _ } from 'meteor/underscore';
 
 import { notifications } from '../core/settings.js';
 import { Rooms } from './rooms.js';
@@ -9,6 +10,11 @@ const notify = function(userIds, notification, data) {
     notification: {type: String},
     data: {type: Object, blackbox: true}
   }).validate({ userIds, notification, data });
+
+  // omit some subscribers
+  if (_.has(data, 'without')) {
+    userIds = _.difference(userIds, data.without);
+  }
   // notify each user
   _.each(userIds, (userId) => {
     const notificationFn = notifications.get(notification);
@@ -17,14 +23,15 @@ const notify = function(userIds, notification, data) {
     // run the notification with data
     notificationFn(data);
   });
+
+  return userIds;
 };
 
 // register helpers only on server for notifications
 Rooms.helpers({
   // notify subscribers of a room
   notify(notification, data) {
-    notify(this.subscribers, notification, data);
-    // return notified users
-    return this.subscribers;
+    // run notification
+    return notify(this.subscribers, notification, data);;
   }
 });
