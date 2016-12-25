@@ -148,14 +148,6 @@ describe('rooms', function() {
         assert.isArray(category.notify('test.notification', {}));
       });
 
-      it('should notify post\'s room on comment, but not post\'s author', function() {
-        const post = Factory.create('post');
-        const postOwnerComment = Factory.create('comment', {postId: post._id, userId: post.userId});
-        const userComment = Factory.create('comment', {postId: post._id});
-        assert.lengthOf(post.room().subscribers, 2);
-        assert.equal(notifyPostOnComment(postOwnerComment, post)[0], userComment.userId);
-      });
-
       it('should notify category\'s room on post', function() {
         const category = Factory.create('category');
         const id = Random.id();
@@ -163,6 +155,14 @@ describe('rooms', function() {
         const post = Factory.create('post', {categories: category._id});
         // TODO!!!
         // assert.equal(notifyCategoryOnPost(post), [id]);
+      });
+
+      it('should notify post\'s room on comment, but not post\'s author', function() {
+        const post = Factory.create('post');
+        const postOwnerComment = Factory.create('comment', {postId: post._id, userId: post.userId});
+        const userComment = Factory.create('comment', {postId: post._id});
+        assert.lengthOf(post.room().subscribers, 2);
+        assert.equal(notifyPostOnComment(postOwnerComment, post)[0], userComment.userId);
       });
     }
   });

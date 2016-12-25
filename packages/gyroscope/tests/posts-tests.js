@@ -5,8 +5,8 @@ import { Random } from 'meteor/random';
 import { Factory } from 'meteor/dburles:factory';
 import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 
-import { permit } from '../lib/core/settings.js';
-import { Posts, postsIndex } from '../lib/posts/posts.js';
+import { permit, queries } from '../lib/core/settings.js';
+import { Posts } from '../lib/posts/posts.js';
 import {
   insert,
   update,
@@ -95,6 +95,21 @@ describe('posts', function() {
 
   describe('publications', function() {
     if (Meteor.isServer) {
+      it('should send posts by query', function (done) {
+        const collector = new PublicationCollector();
+        const postOne = Factory.create('post');
+        const postTwo = Factory.create('post');
+        // set the query function
+        queries.set({'posts.testQuery': function(params) {
+          return {selector: params.selector, options: {skip: params.skip}};
+        }});
+        // collect publication result
+        collector.collect('posts.byQuery', 'posts.testQuery', {selector: {}, skip: 1}, (collections) => {
+          assert.equal(collections.posts.length, 1);
+          done();
+        });
+      });
+
       it('should send a single post', function (done) {
         const collector = new PublicationCollector();
         const post = Factory.create('post');
@@ -103,27 +118,6 @@ describe('posts', function() {
           assert.equal(collections.posts.length, 1);
           done();
         });
-      });
-    }
-  });
-
-  describe('search', function() {
-    const index = postsIndex;
-
-    if (Meteor.isServer) {
-      beforeEach(function() {
-        Posts.remove({});
-      });
-
-      it('should search for posts by text', function() {
-        permit.set({
-          'posts.search': () => true,
-        });
-
-        const post = Factory.create('post');
-        const posts = index.search(post.title).fetch();
-
-        assert.equal(posts.length, 1);
       });
     }
   });

@@ -69,14 +69,6 @@ Posts.helpers({
   }
 });
 
-// init search with a function, for dynamic setup
-export const postsIndex = new Index({
-  collection: Posts,
-  fields: ['title', 'body'],
-  engine: new MongoDBEngine(),
-  permission: (options) => permit.toDo(options.userId, 'posts.search')
-});
-
 // define factory generators for tests
 Factory.define('post', Posts, {
   title: () => faker.lorem.sentence(),

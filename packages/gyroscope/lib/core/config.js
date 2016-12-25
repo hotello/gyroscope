@@ -11,7 +11,7 @@ export const config = {
     'posts.insert': withUser,
     'posts.update': withUser,
     'posts.remove': withUser,
-    'posts.search': noUser,
+    'posts.publish.byQuery': noUser,
     'posts.publish.single': noUser,
 
     'categories.insert': withUser,
@@ -37,6 +37,20 @@ export const config = {
     },
     'comments.insert': function(data) {
       console.log(`Nofified comments.insert for: ${data.comment.body}`);
+    }
+  },
+
+  queries: {
+    'posts.byCategory': function(params) {
+      const MAX_TODOS = 1000;
+
+      return {
+        selector: {categories: {$in: [params.categoryId]}},
+        options: {
+          sort: {createdAt: -1},
+          limit: Math.min(params.limit, MAX_TODOS)
+        }
+      };
     }
   }
 };

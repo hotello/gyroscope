@@ -19,6 +19,7 @@ Package.onUse(function(api) {
     'mongo@1.1.14',
     'blaze-html-templates',
     'reactive-var@1.0.11',
+    'reactive-dict@1.1.8',
     'jquery@1.11.10',
     'tracker@1.1.1',
 

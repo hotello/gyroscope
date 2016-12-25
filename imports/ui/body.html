@@ -12,6 +12,11 @@
     {{> Posts_form_update postId=post._id}}
   {{/if}}
 
+  <h3>List</h3>
+  {{#if Template.subscriptionsReady}}
+    {{> postsList categoryId=category._id}}
+  {{/if}}
+
   <h3>Single</h3>
   {{#if Template.subscriptionsReady}}
     {{#Posts_item postId=post._id}}
@@ -19,9 +24,6 @@
       <p>{{post.body}}</p>
     {{/Posts_item }}
   {{/if}}
-
-  <h3>List</h3>
-  {{> postsList}}
 
   <h2>Categories</h2>
 
@@ -49,12 +51,17 @@
 </body>
 
 <template name="postsList">
-  {{#Posts_list
-    showInput=true
-    noResultsTemplate="noResultsCustom"
-    searchingTemplate="searchingCustom"
-  }}
-    <p>{{post.title}}</p>
+  {{#Posts_list query=(query categoryId)}}
+    {{#each post in posts}}
+      <p>{{post.title}}</p>
+    {{/each}}
+    {{#if noResults}}
+      <p>No results found.</p>
+    {{/if}}
+    {{#if loading}}
+      <p>Loading...</p>
+    {{/if}}
+    <button class="js-load-more">Load More...</button>
   {{/Posts_list}}
 </template>
 
@@ -68,12 +75,4 @@
   {{#Comments_list postId=postId}}
     <p>{{comment.body}}</p>
   {{/Comments_list}}
-</template>
-
-<template name="noResultsCustom">
-  <p>Belin nu ghe ninte!</p>
-</template>
-
-<template name="searchingCustom">
-  <p>Vedemmu che ghe chi...</p>
 </template>

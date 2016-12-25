@@ -17,3 +17,18 @@ Template.body.helpers({
   category: () => Categories.findOne(),
   comment: () => Comments.findOne()
 });
+
+/**
+ * postsList
+ */
+Template.postsList.helpers({
+  query: (categoryId) => {
+    const perPage = 1;
+    return {name: 'posts.byCategory', params: { categoryId, perPage }};
+  }
+});
+Template.postsList.events({
+  'click .js-load-more'() {
+    this.loadMore();
+  }
+});

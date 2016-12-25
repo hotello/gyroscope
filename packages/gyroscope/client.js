@@ -1,4 +1,5 @@
 // register components
+import './lib/core/client/list.js';
 import './lib/posts/client/posts.js';
 import './lib/categories/client/categories.js';
 import './lib/comments/client/comments.js';

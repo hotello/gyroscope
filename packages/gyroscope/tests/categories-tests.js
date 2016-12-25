@@ -5,17 +5,12 @@ import { Random } from 'meteor/random';
 import { Factory } from 'meteor/dburles:factory';
 import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 
-import { Gyroscope } from '../lib/core/settings.js';
-import { Categories, categoriesIndex } from '../lib/categories/categories.js';
+import { Categories } from '../lib/categories/categories.js';
 import {
   insert,
   update,
   remove
 } from '../lib/categories/methods.js';
-
-Meteor.methods({
-  'test.resetCategories': () => Categories.remove({}),
-});
 
 describe('categories', function() {
   describe('collection', function() {
@@ -47,36 +42,34 @@ describe('categories', function() {
   });
 
   describe('methods', function() {
-    if (Meteor.isServer) {
-      const userId = Random.id();
-      let methodInvocation = {userId};
+    const userId = Random.id();
+    let methodInvocation = {userId};
 
-      beforeEach(function(done) {
-        Meteor.call('test.resetCategories', done);
-      });
+    beforeEach(function() {
+      if (Meteor.isServer) Categories.remove({});
+    });
 
-      it('should insert categories', function() {
-        const category = Factory.tree('category');
-        const result = insert._execute(methodInvocation, category);
+    it('should insert categories', function() {
+      const category = Factory.tree('category');
+      const result = insert._execute(methodInvocation, category);
 
-        assert.isString(result);
-      });
+      assert.isString(result);
+    });
 
-      it('should update categories', function() {
-        const categoryId = Factory.create('category')._id;
-        const category = Factory.tree('category');
-        const result = update._execute(methodInvocation, {_id: categoryId, modifier: {$set: category}});
+    it('should update categories', function() {
+      const categoryId = Factory.create('category')._id;
+      const category = Factory.tree('category');
+      const result = update._execute(methodInvocation, {_id: categoryId, modifier: {$set: category}});
 
-        assert.equal(result, 1);
-      });
+      assert.equal(result, 1);
+    });
 
-      it('should remove categories', function() {
-        const categoryId = Factory.create('category')._id;
-        const result = remove._execute(methodInvocation, { categoryId });
+    it('should remove categories', function() {
+      const categoryId = Factory.create('category')._id;
+      const result = remove._execute(methodInvocation, { categoryId });
 
-        assert.equal(result, 1);
-      });
-    }
+      assert.equal(result, 1);
+    });
   });
 
   describe('publications', function() {
