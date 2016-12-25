@@ -152,7 +152,7 @@ describe('rooms', function() {
         const category = Factory.create('category');
         const id = Random.id();
         category.addSubscriber(id); // add subscriber to category
-        const post = Factory.create('post', {categories: category._id});
+        const post = Factory.create('post', {categories: [category._id]});
         // TODO!!!
         // assert.equal(notifyCategoryOnPost(post), [id]);
       });

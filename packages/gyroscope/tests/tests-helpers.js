@@ -12,7 +12,7 @@ Factory.define('post', Posts, {
   title: () => faker.lorem.sentence(),
   body: () => faker.lorem.paragraphs(),
   userId: () => Random.id(),
-  categories: () => Random.id()
+  categories: () => [Random.id()]
 });
 Factory.define('post.fromForm', Posts, {
   title: () => faker.lorem.sentence(),

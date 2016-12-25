@@ -6,8 +6,6 @@ import { FlexibleCollection } from '../core/flexible-collection.js';
 import { ID_FIELD_OPT } from '../core/collections-helpers.js';
 import { Categories } from '../categories/categories.js';
 
-import './denormalizers.js';
-
 // create collection
 export const Posts = new FlexibleCollection('posts');
 
