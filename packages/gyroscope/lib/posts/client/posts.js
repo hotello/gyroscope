@@ -3,7 +3,7 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { AutoForm } from 'meteor/aldeed:autoform';
 import { ReactiveDict } from 'meteor/reactive-dict';
 
-import { messages, hooks, queries } from '../../core/settings.js';
+import { hooks, queries } from '../../core/settings.js';
 import { Posts } from '../posts.js';
 import { POSTS_METHODS_SCHEMA, insert } from '../methods.js';
 import { ID_FIELD } from '../../core/collections-helpers.js';
@@ -44,7 +44,7 @@ Template.Posts_form_insert.helpers({
     return POSTS_METHODS_SCHEMA;
   },
   prefill(categoryId) {
-    return categoryId ? {categories: categoryId} : {};
+    return categoryId ? {categories: [categoryId]} : {};
   }
 });
 AutoForm.addHooks('Posts_form_insert', {

@@ -24,25 +24,16 @@ describe('posts', function() {
 
       it('should insert post with auto values', function() {
         const post = Factory.create('post');
-
-        assert.isObject(Posts.findOne());
-        // posts must have a slug
-        assert.isString(post.slug);
-        // posts must have a createdAt
-        assert.typeOf(post.createdAt, 'date');
+        assert.isObject(Posts.findOne(post._id));
       });
 
       it('should alter posts with auto values', function() {
         const post = Factory.create('post');
-
-        // check update
-        Posts.update(post._id, {$set: Factory.tree('post')});
-        assert.equal(post.createdAt.getTime(), Posts.findOne(post._id).createdAt.getTime());
-        assert.notEqual(post.slug, Posts.findOne(post._id).slug);
+        const updateResult = Posts.update(post._id, {$set: Factory.tree('post')});
+        assert.equal(updateResult, 1);
         // check upsert
-        // Posts.upsert(post._id, {$set: Factory.tree('post')});
-        // assert.equal(post.createdAt.getTime(), Posts.findOne(post._id).createdAt.getTime());
-        // assert.notEqual(post.slug, Posts.findOne(post._id).slug);
+        const upsertResult = Posts.upsert(post._id, {$set: Factory.tree('post')});
+        assert.equal(upsertResult.numberAffected, 1);
       });
 
       describe('helpers', function() {

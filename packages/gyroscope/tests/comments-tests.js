@@ -26,19 +26,13 @@ describe('comments', function() {
         const comment = Factory.create('comment');
         // check for insert
         assert.isObject(Comments.findOne());
-        // comments must have a createdAt
-        assert.typeOf(comment.createdAt, 'date');
       });
 
       it('should alter comments with auto values', function() {
         const comment = Factory.create('comment');
         // check update
-        Comments.update(comment._id, {$set: Factory.tree('comment')});
-        assert.equal(comment.createdAt.getTime(), Comments.findOne(comment._id).createdAt.getTime());
-        // check upsert
-        // Comments.upsert(comment._id, {$set: Factory.tree('comment')});
-        // assert.equal(comment.createdAt.getTime(), Comments.findOne(comment._id).createdAt.getTime());
-        // assert.notEqual(comment.slug, Comments.findOne(comment._id).slug);
+        const updateResult = Comments.update(comment._id, {$set: Factory.tree('comment')});
+        assert.equal(updateResult, 1);
       });
     }
   });

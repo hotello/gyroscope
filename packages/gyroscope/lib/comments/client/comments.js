@@ -2,7 +2,7 @@ import { Template } from 'meteor/templating';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { AutoForm } from 'meteor/aldeed:autoform';
 
-import { messages, hooks } from '../../core/settings.js';
+import { hooks } from '../../core/settings.js';
 import { Comments } from '../comments.js';
 import { COMMENTS_METHODS_SCHEMA, insert } from '../methods.js';
 import { ID_FIELD } from '../../core/collections-helpers.js';

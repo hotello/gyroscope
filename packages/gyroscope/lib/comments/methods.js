@@ -2,15 +2,14 @@ import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
-import { permit } from '../core/settings.js';
+import { permit, general } from '../core/settings.js';
 import { Comments } from './comments.js';
 import { ID_FIELD, ID_FIELD_OPT } from '../core/collections-helpers.js';
 
 // common validator for methods
-export const COMMENTS_METHODS_SCHEMA = new SimpleSchema({
-  body: Comments.simpleSchema().schema('body'),
-  postId: ID_FIELD
-});
+export const COMMENTS_METHODS_SCHEMA = Comments.schema.pick(
+  general.get('comments.methods.schema')
+);
 // accept only ids
 export const COMMENTS_ID_ONLY = new SimpleSchema({
   commentId: ID_FIELD

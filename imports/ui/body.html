@@ -9,7 +9,10 @@
   <h3>Forms</h3>
   {{#if Template.subscriptionsReady}}
     {{> Posts_form_insert categoryId=category._id}}
-    {{> Posts_form_update postId=post._id}}
+
+    {{#if post}}
+      {{> Posts_form_update postId=post._id}}
+    {{/if}}
   {{/if}}
 
   <h3>List</h3>
@@ -19,10 +22,12 @@
 
   <h3>Single</h3>
   {{#if Template.subscriptionsReady}}
-    {{#Posts_item postId=post._id}}
-      <h4>{{post.title}}</h4>
-      <p>{{post.body}}</p>
-    {{/Posts_item }}
+    {{#if post}}
+      {{#Posts_item postId=post._id}}
+        <h4>{{post.title}}</h4>
+        <p>{{post.body}}</p>
+      {{/Posts_item }}
+    {{/if}}
   {{/if}}
 
   <h2>Categories</h2>
@@ -41,7 +46,9 @@
   <h3>Forms</h3>
   {{#if Template.subscriptionsReady}}
     {{> Comments_form_insert postId=post._id}}
-    {{> Comments_form_update commentId=comment._id}}
+    {{#if comment}}
+      {{> Comments_form_update commentId=comment._id}}
+    {{/if}}
   {{/if}}
 
   <h3>List</h3>

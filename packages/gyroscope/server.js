@@ -1,5 +1,4 @@
 // at startup
-import './lib/core/seed.js';
 import './lib/rooms/notify.js';
 import './lib/rooms/notification-helpers.js';
 import './lib/rooms/hooks.js';
@@ -16,7 +15,6 @@ import './lib/comments/methods.js';
 import {
   general,
   permit,
-  messages,
   notifications
 } from './lib/core/settings.js';
 import { Posts } from './lib/posts/posts.js';
@@ -28,7 +26,6 @@ import { sendEmail } from './lib/rooms/send-email-notification.js';
 export {
   general,
   permit,
-  messages,
   notifications,
   Posts,
   Categories,

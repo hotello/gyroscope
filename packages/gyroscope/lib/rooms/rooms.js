@@ -1,7 +1,5 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { Factory } from 'meteor/dburles:factory';
-import { Random } from 'meteor/random';
 import { _ } from 'meteor/underscore';
 
 import { ID_FIELD } from '../core/collections-helpers.js';
@@ -54,11 +52,4 @@ Rooms.helpers({
     checkUserId(userId);
     return Rooms.update(this._id, {$pull: {subscribers: userId}});
   }
-});
-
-// define factory generators for tests
-Factory.define('room', Rooms, {
-  ownerId: () => Random.id(),
-  users: () => [Random.id()],
-  subscribers: () => [Random.id()]
 });

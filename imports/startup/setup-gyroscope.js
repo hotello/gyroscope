@@ -1,6 +1,5 @@
 import {
-  permit,
-  messages
+  permit
 } from 'meteor/hotello:gyroscope';
 
 const always = () => true;
@@ -18,8 +17,4 @@ permit.set({
   'comments.insert': always,
   'comments.update': always,
   'comments.remove': always
-});
-
-messages.set({
-  'posts.loadMore': 'Carega carega!!!'
 });

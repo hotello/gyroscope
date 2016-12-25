@@ -21,22 +21,17 @@ describe('categories', function() {
 
       it('should insert category with auto values', function() {
         const category = Factory.create('category');
-
         assert.isObject(Categories.findOne());
-        // categories must have a slug
-        assert.isString(category.slug);
       });
 
       it('should alter categories with auto values', function() {
         const category = Factory.create('category');
-
         // check update
-        Categories.update(category._id, {$set: Factory.tree('category')});
-        assert.notEqual(category.slug, Categories.findOne(category._id).slug);
-        // check upsert WARNING: we have a bug in aldeed:collection2-core, we can't upsert
-        // Categories.upsert(category._id, {$set: Factory.tree('category')});
-        // assert.equal(category.createdAt.getTime(), Categories.findOne(category._id).createdAt.getTime());
-        // assert.notEqual(category.slug, Categories.findOne(category._id).slug);
+        const updateResult = Categories.update(category._id, {$set: Factory.tree('category')});
+        assert.equal(updateResult, 1);
+        // check upsert
+        const upsertResult = Categories.upsert(category._id, {$set: Factory.tree('category')});
+        assert.equal(upsertResult.numberAffected, 1);
       });
     }
   });

@@ -22,11 +22,11 @@ Package.onUse(function(api) {
     'reactive-dict@1.1.8',
     'jquery@1.11.10',
     'tracker@1.1.1',
+    'email@1.1.18',
 
     'standard-minifier-js@1.2.1',
     'es5-shim@4.6.15',
     'ecmascript@0.6.1',
-    'email@1.1.18',
 
     'aldeed:simple-schema@1.5.3',
     'aldeed:collection2@2.10.0',
@@ -34,9 +34,6 @@ Package.onUse(function(api) {
     'dburles:factory@1.1.0',
     'aldeed:autoform@5.8.1',
     'mdg:validated-method@1.1.0',
-
-    'easy:search@2.1.4',
-
     'meteorhacks:ssr@2.2.0'
   ]);
 

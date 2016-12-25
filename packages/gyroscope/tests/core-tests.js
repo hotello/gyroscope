@@ -1,11 +1,14 @@
 import { assert } from 'meteor/practicalmeteor:chai';
 import { _ } from 'meteor/underscore';
+import { Factory } from 'meteor/dburles:factory';
 
 import { Dict } from '../lib/core/dict.js';
 import { StringsDict } from '../lib/core/strings-dict.js';
 import { FunctionsDict } from '../lib/core/functions-dict.js';
 import { Permit } from '../lib/core/permit.js';
 import { Hooks } from '../lib/core/hooks.js';
+import { FlexibleCollection } from '../lib/core/flexible-collection.js';
+import { hooks } from '../lib/core/settings.js';
 
 describe('core', function() {
   describe('dict', function() {
@@ -107,6 +110,33 @@ describe('core', function() {
       assert.equal(hooks.run('test.hooks', 'noHooks'), 'noHooks');
       _.times(3, () => { hooks.add('test.hooks', fn); });
       assert.equal(hooks.run('test.hooks', 0), 3);
+    });
+  });
+
+  describe('flexible collection', function() {
+    const testCollection = new FlexibleCollection('test');
+
+    before(function() {
+      if (Meteor.isServer) testCollection.remove({});
+      Factory.define('testDoc', testCollection, {});
+    });
+
+    it('should insert doc with hooks', function() {
+      assert.isString(testCollection.insert({}));
+    });
+
+    it('should update doc with hooks', function() {
+      const doc = Factory.create('testDoc');
+      assert.equal(testCollection.update(doc._id, {test: true}), 1);
+    });
+
+    it('should upsert doc with hooks', function() {
+      assert.isString(testCollection.upsert('test_id', {}).insertedId);
+    });
+
+    it('should remove doc with hooks', function() {
+      const doc = Factory.create('testDoc');
+      assert.equal(testCollection.remove(doc._id), 1);
     });
   });
 });

@@ -3,8 +3,13 @@ const noUser = (userId, data) => true;
 
 export const config = {
   general: {
+    // settings for assets
     'assets': false,
-    'assets.emailTemplates': 'assets/email-templates'
+    'assets.emailTemplates': 'assets/email-templates',
+    // settings for collections
+    'posts.methods.schema': ['title', 'body', 'categories', 'categories.$'],
+    'categories.methods.schema': ['name'],
+    'comments.methods.schema': ['body', 'postId']
   },
 
   permit: {
@@ -25,10 +30,6 @@ export const config = {
     'comments.remove': withUser,
     'comments.publish.byQuery': noUser,
     'comments.publish.single': noUser
-  },
-
-  messages: {
-    'posts.loadMore': 'Load more posts...'
   },
 
   notifications: {
