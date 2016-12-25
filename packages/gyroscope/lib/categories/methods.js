@@ -6,10 +6,10 @@ import { permit, general } from '../core/settings.js';
 import { Categories } from './categories.js';
 import { ID_FIELD } from '../core/collections-helpers.js';
 
-// common validator for methods
-export const CATEGORIES_METHODS_SCHEMA = Categories.schema.pick(
-  general.get('categories.methods.schema')
-);
+// dynamically generate the methods schema
+export const generateCategoriesMethodsSchema = function() {
+  return Categories.simpleSchema().pick(general.get('categories.methods.schema'));
+};
 // accept only ids
 export const CATEGORIES_ID_ONLY = new SimpleSchema({
   categoryId: ID_FIELD
@@ -17,7 +17,9 @@ export const CATEGORIES_ID_ONLY = new SimpleSchema({
 
 export const insert = new ValidatedMethod({
   name: 'categories.insert',
-  validate: CATEGORIES_METHODS_SCHEMA.validator({ clean: true }),
+  validate(category) {
+    generateCategoriesMethodsSchema().validate(category);
+  },
   run(category) {
     if (permit.notToDo(this.userId, 'categories.insert')) {
       throw new Meteor.Error('categories.insert.unauthorized');
@@ -31,7 +33,7 @@ export const update = new ValidatedMethod({
   name: 'categories.update',
   validate({ _id, modifier }) {
     CATEGORIES_ID_ONLY.validate({categoryId: _id});
-    CATEGORIES_METHODS_SCHEMA.validate(modifier, {modifier: true});
+    generateCategoriesMethodsSchema().validate(modifier, {modifier: true});
   },
   run({ _id, modifier }) {
     if (permit.notToDo(this.userId, 'categories.update')) {

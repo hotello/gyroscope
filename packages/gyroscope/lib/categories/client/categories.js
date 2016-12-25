@@ -4,7 +4,7 @@ import { AutoForm } from 'meteor/aldeed:autoform';
 
 import { hooks } from '../../core/settings.js';
 import { Categories } from '../categories.js';
-import { CATEGORIES_METHODS_SCHEMA, insert, update } from '../methods.js';
+import { generateCategoriesMethodsSchema } from '../methods.js';
 import { ID_FIELD } from '../../core/collections-helpers.js';
 
 import './categories.html';
@@ -21,7 +21,7 @@ Template.Categories_list.helpers({
  */
 Template.Categories_form_insert.helpers({
   schema() {
-    return CATEGORIES_METHODS_SCHEMA;
+    return generateCategoriesMethodsSchema();
   }
 });
 AutoForm.addHooks('Categories_form_insert', {
@@ -49,7 +49,7 @@ Template.Categories_form_update.onCreated(function() {
 });
 Template.Categories_form_update.helpers({
   schema() {
-    return CATEGORIES_METHODS_SCHEMA;
+    return generateCategoriesMethodsSchema();
   },
 
   category() {

@@ -4,7 +4,7 @@ import { AutoForm } from 'meteor/aldeed:autoform';
 
 import { hooks } from '../../core/settings.js';
 import { Comments } from '../comments.js';
-import { COMMENTS_METHODS_SCHEMA, insert } from '../methods.js';
+import { generateCommentsMethodsSchema } from '../methods.js';
 import { ID_FIELD } from '../../core/collections-helpers.js';
 
 import './comments.html';
@@ -28,7 +28,7 @@ Template.Comments_form_insert.onCreated(function() {
 });
 Template.Comments_form_insert.helpers({
   schema() {
-    return COMMENTS_METHODS_SCHEMA;
+    return generateCommentsMethodsSchema();
   },
 
   prefill(postId) {
@@ -60,7 +60,7 @@ Template.Comments_form_update.onCreated(function() {
 });
 Template.Comments_form_update.helpers({
   schema() {
-    return COMMENTS_METHODS_SCHEMA;
+    return generateCommentsMethodsSchema();
   },
 
   comment() {

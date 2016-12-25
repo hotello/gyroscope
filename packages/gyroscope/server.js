@@ -17,6 +17,7 @@ import {
   permit,
   notifications
 } from './lib/core/settings.js';
+import { extendSchema } from './lib/core/collections-helpers.js';
 import { Posts } from './lib/posts/posts.js';
 import { Categories } from './lib/categories/categories.js';
 import { Rooms } from './lib/rooms/rooms.js';
@@ -27,6 +28,7 @@ export {
   general,
   permit,
   notifications,
+  extendSchema,
   Posts,
   Categories,
   Rooms,

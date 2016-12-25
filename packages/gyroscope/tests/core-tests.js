@@ -1,6 +1,7 @@
 import { assert } from 'meteor/practicalmeteor:chai';
 import { _ } from 'meteor/underscore';
 import { Factory } from 'meteor/dburles:factory';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 import { Dict } from '../lib/core/dict.js';
 import { StringsDict } from '../lib/core/strings-dict.js';
@@ -9,6 +10,9 @@ import { Permit } from '../lib/core/permit.js';
 import { Hooks } from '../lib/core/hooks.js';
 import { FlexibleCollection } from '../lib/core/flexible-collection.js';
 import { hooks } from '../lib/core/settings.js';
+import { extendSchema } from '../lib/core/collections-helpers.js';
+
+const testCollection = new FlexibleCollection('test');
 
 describe('core', function() {
   describe('dict', function() {
@@ -114,8 +118,6 @@ describe('core', function() {
   });
 
   describe('flexible collection', function() {
-    const testCollection = new FlexibleCollection('test');
-
     before(function() {
       if (Meteor.isServer) testCollection.remove({});
       Factory.define('testDoc', testCollection, {});
@@ -137,6 +139,17 @@ describe('core', function() {
     it('should remove doc with hooks', function() {
       const doc = Factory.create('testDoc');
       assert.equal(testCollection.remove(doc._id), 1);
+    });
+  });
+
+  describe('collections helpers', function() {
+    it('should extend the schema of a collection', function() {
+      testCollection.schema = new SimpleSchema({
+        field1: {type: String, optional: true}
+      });
+      testCollection.attachSchema(testCollection.schema);
+      extendSchema(testCollection, {field2: {type: String, optional: true}});
+      assert.property(testCollection.simpleSchema().schema(), 'field2');
     });
   });
 });

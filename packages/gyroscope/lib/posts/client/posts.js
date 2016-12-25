@@ -5,7 +5,7 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 
 import { hooks, queries } from '../../core/settings.js';
 import { Posts } from '../posts.js';
-import { POSTS_METHODS_SCHEMA, insert } from '../methods.js';
+import { generatePostsMethodsSchema } from '../methods.js';
 import { ID_FIELD } from '../../core/collections-helpers.js';
 
 import './posts.html';
@@ -41,7 +41,7 @@ Template.Posts_item.helpers({
  */
 Template.Posts_form_insert.helpers({
   schema() {
-    return POSTS_METHODS_SCHEMA;
+    return generatePostsMethodsSchema();
   },
   prefill(categoryId) {
     return categoryId ? {categories: [categoryId]} : {};
@@ -70,7 +70,7 @@ Template.Posts_form_update.onCreated(function() {
 });
 Template.Posts_form_update.helpers({
   schema() {
-    return POSTS_METHODS_SCHEMA;
+    return generatePostsMethodsSchema();
   },
   post() {
     const instance = Template.instance();

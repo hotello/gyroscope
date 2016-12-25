@@ -6,10 +6,10 @@ import { permit, general } from '../core/settings.js';
 import { Posts } from './posts.js';
 import { ID_FIELD, ID_FIELD_OPT } from '../core/collections-helpers.js';
 
-// common validator for methods
-export const POSTS_METHODS_SCHEMA = Posts.schema.pick(
-  general.get('posts.methods.schema')
-);
+// dynamically generate the methods schema
+export const generatePostsMethodsSchema = function() {
+  return Posts.simpleSchema().pick(general.get('posts.methods.schema'));
+};
 // accept only ids
 export const POSTS_ID_ONLY = new SimpleSchema({
   postId: ID_FIELD
@@ -17,7 +17,9 @@ export const POSTS_ID_ONLY = new SimpleSchema({
 
 export const insert = new ValidatedMethod({
   name: 'posts.insert',
-  validate: POSTS_METHODS_SCHEMA.validator(),
+  validate(post) {
+    generatePostsMethodsSchema().validate(post)
+  },
   run(post) {
     if (permit.notToDo(this.userId, 'posts.insert')) {
       throw new Meteor.Error('posts.insert.unauthorized');
@@ -33,7 +35,7 @@ export const update = new ValidatedMethod({
   name: 'posts.update',
   validate({ _id, modifier }) {
     POSTS_ID_ONLY.validate({postId: _id});
-    POSTS_METHODS_SCHEMA.validate(modifier, {modifier: true});
+    generatePostsMethodsSchema().validate(modifier, {modifier: true});
   },
   run({ _id, modifier }) {
     if (permit.notToDo(this.userId, 'posts.update')) {

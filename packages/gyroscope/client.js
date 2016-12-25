@@ -6,16 +6,20 @@ import './lib/comments/client/comments.js';
 
 // exports
 import {
+  general,
   permit,
-  queries,
+  queries
 } from './lib/core/settings.js';
+import { extendSchema } from './lib/core/collections-helpers.js';
 import { Posts } from './lib/posts/posts.js';
 import { Categories } from './lib/categories/categories.js';
 import { Comments } from './lib/comments/comments.js';
 
 export {
+  general,
   permit,
   queries,
+  extendSchema,
   Posts,
   Categories,
   Comments

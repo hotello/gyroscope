@@ -6,10 +6,10 @@ import { permit, general } from '../core/settings.js';
 import { Comments } from './comments.js';
 import { ID_FIELD, ID_FIELD_OPT } from '../core/collections-helpers.js';
 
-// common validator for methods
-export const COMMENTS_METHODS_SCHEMA = Comments.schema.pick(
-  general.get('comments.methods.schema')
-);
+// dynamically generate the methods schema
+export const generateCommentsMethodsSchema = function() {
+  return Comments.simpleSchema().pick(general.get('comments.methods.schema'));
+};
 // accept only ids
 export const COMMENTS_ID_ONLY = new SimpleSchema({
   commentId: ID_FIELD
@@ -17,7 +17,9 @@ export const COMMENTS_ID_ONLY = new SimpleSchema({
 
 export const insert = new ValidatedMethod({
   name: 'comments.insert',
-  validate: COMMENTS_METHODS_SCHEMA.validator(),
+  validate(comment) {
+    generateCommentsMethodsSchema().validate(comment)
+  },
   run(comment) {
     if (permit.notToDo(this.userId, 'comments.insert')) {
       throw new Meteor.Error('comments.insert.unauthorized');
@@ -33,7 +35,7 @@ export const update = new ValidatedMethod({
   name: 'comments.update',
   validate({ _id, modifier }) {
     COMMENTS_ID_ONLY.validate({commentId: _id});
-    COMMENTS_METHODS_SCHEMA.validate(modifier, {modifier: true});
+    generateCommentsMethodsSchema().validate(modifier, {modifier: true});
   },
   run({ _id, modifier }) {
     if (permit.notToDo(this.userId, 'comments.update')) {
