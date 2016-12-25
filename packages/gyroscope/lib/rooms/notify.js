@@ -1,10 +1,12 @@
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { _ } from 'meteor/underscore';
 
-import { notifications } from '../core/settings.js';
+import { notifications, hooks } from '../core/settings.js';
 import { Rooms } from './rooms.js';
 
 const notify = function(userIds, notification, data) {
+  let users;
+
   new SimpleSchema({
     userIds: {type: [String], regEx: SimpleSchema.RegEx.Id},
     notification: {type: String},
@@ -15,11 +17,13 @@ const notify = function(userIds, notification, data) {
   if (_.has(data, 'without')) {
     userIds = _.difference(userIds, data.without);
   }
+  // fetch users only once
+  users = hooks.run('notify.fetchUsers', userIds);
   // notify each user
-  _.each(userIds, (userId) => {
+  _.each(users, (user) => {
     const notificationFn = notifications.get(notification);
     // set userId in data
-    data.userId = userId;
+    data.user = user;
     // run the notification with data
     notificationFn(data);
   });

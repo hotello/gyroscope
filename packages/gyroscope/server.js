@@ -15,7 +15,8 @@ import './lib/comments/methods.js';
 import {
   general,
   permit,
-  notifications
+  notifications,
+  hooks
 } from './lib/core/settings.js';
 import { extendSchema } from './lib/core/collections-helpers.js';
 import { Posts } from './lib/posts/posts.js';
@@ -28,6 +29,7 @@ export {
   general,
   permit,
   notifications,
+  hooks,
   extendSchema,
   Posts,
   Categories,

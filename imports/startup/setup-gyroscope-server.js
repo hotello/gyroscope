@@ -1,12 +1,57 @@
-import { Random } from 'meteor/random';
 import {
   Posts,
   Categories,
   Comments,
   notifications,
   sendEmail,
-  general
+  general,
+  hooks
 } from 'meteor/hotello:gyroscope';
+
+// pass enclosing app assets object to gyroscope package
+general.set({
+  'assets': Assets,
+  'assets.emailTemplates': 'email-templates'
+});
+// setup notifications
+notifications.set({
+  'posts.insert': function(data) {
+    sendEmail('custom', {
+      // get user object from id with data.userId
+      to: `${data.user.email}`,
+      from: 'test@gyroscope.com',
+      replyTo: 'test@gyroscope.com',
+      subject: 'New post on Gyroscope Test App',
+    }, {
+      body: `A new post was created: ${data.post.title}`,
+      callToAction: {
+        url: `http://gyroscope-test.com/posts/${data.post._id}`,
+        label: 'Go to post'
+      }
+    });
+  },
+  'comments.insert': function(data) {
+    sendEmail('custom', {
+      // get user object from id with data.userId
+      to: `${data.user.email}`,
+      from: 'test@gyroscope.com',
+      replyTo: 'test@gyroscope.com',
+      subject: 'New comment on Gyroscope Test App',
+    }, {
+      body: `A new comment was created: ${data.comment.body}`,
+      callToAction: {
+        url: `http://gyroscope-test.com/posts/${data.comment.postId}`,
+        label: 'Go to post'
+      }
+    });
+  }
+});
+// fetch users for notifications
+hooks.add('notify.fetchUsers', function(userIds) {
+  return _.map(userIds, (userId) => {
+    return {email: `${userId}@email.com`};
+  }); /* Meteor.users.find({_id: {$in: userIds}}).fetch() */
+});
 
 // some publications
 Meteor.publish('posts.random', function() {
@@ -27,43 +72,4 @@ Meteor.publish('comments.random', function() {
   const post = Posts.findOne();
   Comments.update(comment._id, {$set: {postId: post._id}});
   return comments;
-});
-
-// pass enclosing app assets object to gyroscope package
-general.set({
-  'assets': Assets,
-  'assets.emailTemplates': 'email-templates'
-});
-// setup notifications
-notifications.set({
-  'posts.insert': function(data) {
-    sendEmail('custom', {
-      // get user object from id with data.userId
-      to: `${data.userId}@user.com`,
-      from: 'test@gyroscope.com',
-      replyTo: 'test@gyroscope.com',
-      subject: 'New post on Gyroscope Test App',
-    }, {
-      body: `A new post was created: ${data.post.title}`,
-      callToAction: {
-        url: `http://gyroscope-test.com/posts/${data.post._id}`,
-        label: 'Go to post'
-      }
-    });
-  },
-  'comments.insert': function(data) {
-    sendEmail('custom', {
-      // get user object from id with data.userId
-      to: `${data.userId}@user.com`,
-      from: 'test@gyroscope.com',
-      replyTo: 'test@gyroscope.com',
-      subject: 'New comment on Gyroscope Test App',
-    }, {
-      body: `A new comment was created: ${data.comment.body}`,
-      callToAction: {
-        url: `http://gyroscope-test.com/posts/${data.comment.postId}`,
-        label: 'Go to post'
-      }
-    });
-  }
 });

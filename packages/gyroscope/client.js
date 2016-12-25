@@ -8,7 +8,8 @@ import './lib/comments/client/comments.js';
 import {
   general,
   permit,
-  queries
+  queries,
+  hooks
 } from './lib/core/settings.js';
 import { extendSchema } from './lib/core/collections-helpers.js';
 import { Posts } from './lib/posts/posts.js';
@@ -19,6 +20,7 @@ export {
   general,
   permit,
   queries,
+  hooks,
   extendSchema,
   Posts,
   Categories,

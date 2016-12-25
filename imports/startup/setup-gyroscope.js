@@ -12,7 +12,7 @@ permit.set({
   'posts.insert': always,
   'posts.update': always,
   'posts.remove': always,
-  'posts.search': always,
+  'posts.byQuery': always,
 
   'categories.insert': always,
   'categories.update': always,
