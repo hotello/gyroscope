@@ -1,7 +1,6 @@
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { _ } from 'meteor/underscore';
 
-import { permit, hooks } from '../core/settings.js';
 import { FlexibleCollection } from '../core/flexible-collection.js';
 import { ID_FIELD_OPT } from '../core/collections-helpers.js';
 import { Categories } from '../categories/categories.js';

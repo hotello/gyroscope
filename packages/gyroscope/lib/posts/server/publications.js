@@ -2,8 +2,8 @@ import { Meteor } from 'meteor/meteor';
 
 import { permit, queries } from '../../core/settings.js';
 import { ID_FIELD } from '../../core/collections-helpers.js';
-import { Posts } from '../posts.js';
 import { generatePublishByQuery } from '../../core/server/generatePublishByQuery.js';
+import { Posts } from '../posts.js';
 
 Meteor.publish('posts.byQuery', generatePublishByQuery({
   collection: Posts,

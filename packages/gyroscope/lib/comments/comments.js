@@ -1,7 +1,6 @@
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 import { FlexibleCollection } from '../core/flexible-collection.js';
-import { hooks } from '../core/settings.js';
 import { ID_FIELD, ID_FIELD_OPT } from '../core/collections-helpers.js';
 
 // create collection

@@ -1,10 +1,9 @@
-import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 import { permit, general } from '../core/settings.js';
-import { Posts } from './posts.js';
 import { ID_FIELD, ID_FIELD_OPT } from '../core/collections-helpers.js';
+import { Posts } from './posts.js';
 
 // dynamically generate the methods schema
 export const generatePostsMethodsSchema = function() {
