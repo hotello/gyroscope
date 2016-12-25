@@ -12,13 +12,8 @@ import './categories.html';
 /**
  * Categories_list
  */
- Template.Categories_list.onCreated(function() {
-   this.autorun(() => {
-     this.subscribe('categories.all');
-   });
- });
 Template.Categories_list.helpers({
-  categories: () => Categories.find()
+  categoriesCollection: () => Categories
 });
 
 /**

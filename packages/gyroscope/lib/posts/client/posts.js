@@ -17,49 +17,6 @@ Template.Posts_list.helpers({
   postsCollection: () => Posts
 });
 
-// /**
-//  * Posts_list
-//  */
-// Template.Posts_list.onCreated(function() {
-//   this.getQuery = () => Template.currentData().query;
-//   this.getPosts = (queryInput) => {
-//     const queryFn = queries.get(queryInput.name);
-//     const query = queryFn(queryInput.params);
-//     return Posts.find(query.selector, query.options);
-//   };
-//   // set state
-//   this.state = new ReactiveDict();
-//   this.state.setDefault({requestedPosts: 1});
-//   // autorun
-//   this.autorun(() => {
-//     new SimpleSchema({
-//       query: {type: Object},
-//       'query.name': {type: String},
-//       'query.params': {type: Object, blackbox: true}
-//     }).validate(Template.currentData());
-//     const name = this.getQuery().name;
-//     const params = this.getQuery().params;
-//     // set the limit from the state for pagination
-//     params.limit = this.state.get('requestedPosts');
-//     // subscribe to posts passing the query name
-//     this.subscribe('posts.byQuery', name, params);
-//   });
-// });
-// Template.Posts_list.helpers({
-//   postsListArgs(query) {
-//     const instance = Template.instance();
-//     return {
-//       posts: instance.getPosts(query),
-//       noResults: instance.subscriptionsReady() && instance.getPosts(query).count() === 0,
-//       loading: !instance.subscriptionsReady(),
-//       loadMore() {
-//         const current = instance.state.get('requestedPosts');
-//         instance.state.set('requestedPosts', current + 1);
-//       }
-//     };
-//   }
-// });
-
 /**
  * Posts_item
  */

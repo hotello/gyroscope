@@ -77,7 +77,6 @@ describe('comments', function() {
   describe('publications', function() {
     if (Meteor.isServer) {
       beforeEach(function() {
-        Posts.remove({});
         Comments.remove({});
       });
 
@@ -95,8 +94,11 @@ describe('comments', function() {
         const collector = new PublicationCollector();
         const post = Factory.create('post');
         const comment = Factory.create('comment', {postId: post._id});
+        const commentTwo = Factory.create('comment', {postId: post._id});
+        const queryName = 'comments.byPost';
+        const queryParams = {postId: post._id, limit: 1};
 
-        collector.collect('comments.byPost', post._id, (collections) => {
+        collector.collect('comments.byQuery', queryName, queryParams, (collections) => {
           assert.equal(collections.comments.length, 1);
           done();
         });

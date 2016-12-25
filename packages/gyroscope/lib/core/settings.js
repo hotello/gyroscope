@@ -10,4 +10,4 @@ export const permit = new Permit(config.permit);
 export const messages = new StringsDict(config.messages);
 export const notifications = new FunctionsDict(config.notifications);
 export const hooks = new Hooks({});
-export const queries = new Dict(config.queries);
+export const queries = new FunctionsDict(config.queries);

@@ -88,11 +88,14 @@ describe('categories', function() {
         });
       });
 
-      it('should send a all categories', function (done) {
+      it('should send all categories', function (done) {
         const collector = new PublicationCollector();
         const category = Factory.create('category');
+        const categoryTwo = Factory.create('category');
+        const queryName = 'categories.all';
+        const queryParams = {limit: 1};
 
-        collector.collect('categories.all', (collections) => {
+        collector.collect('categories.byQuery', queryName, queryParams, (collections) => {
           assert.equal(collections.categories.length, 1);
           done();
         });

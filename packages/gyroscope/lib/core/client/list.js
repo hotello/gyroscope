@@ -52,7 +52,7 @@ Template.List.helpers({
   listArgs(query) {
     const instance = Template.instance();
     return {
-      posts: instance.getCursor(query),
+      documents: instance.getCursor(query),
       noResults: instance.subscriptionsReady() && instance.getCursor(query).count() === 0,
       loading: !instance.subscriptionsReady(),
       loadMore() {

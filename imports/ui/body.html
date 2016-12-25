@@ -52,11 +52,11 @@
 
 <template name="postsList">
   {{#Posts_list query=(query categoryId)}}
-    {{#each post in posts}}
-      <p>{{post.title}}</p>
+    {{#each document in documents}}
+      <p>{{document.title}}</p>
     {{/each}}
     {{#if noResults}}
-      <p>No results found.</p>
+      <p>No posts.</p>
     {{/if}}
     {{#if loading}}
       <p>Loading...</p>
@@ -66,13 +66,31 @@
 </template>
 
 <template name="categoriesList">
-  {{#Categories_list}}
-    <p>{{category.name}}</p>
+  {{#Categories_list query=query}}
+    {{#each document in documents}}
+      <p>{{document.name}}</p>
+    {{/each}}
+    {{#if noResults}}
+      <p>No categories. Go on, create some!</p>
+    {{/if}}
+    {{#if loading}}
+      <p>Loading...</p>
+    {{/if}}
+    <button class="js-load-more">Load More...</button>
   {{/Categories_list}}
 </template>
 
 <template name="commentsList">
-  {{#Comments_list postId=postId}}
-    <p>{{comment.body}}</p>
+  {{#Comments_list query=(query postId)}}
+    {{#each document in documents}}
+      <p>{{document.body}}</p>
+    {{/each}}
+    {{#if noResults}}
+      <p>No comments here.</p>
+    {{/if}}
+    {{#if loading}}
+      <p>Loading...</p>
+    {{/if}}
+    <button class="js-load-more">Load More...</button>
   {{/Comments_list}}
 </template>

@@ -1,7 +1,11 @@
 <template name="Categories_list">
-  {{#each category in categories}}
-    {{> Template.contentBlock category=category}}
-  {{/each}}
+  {{#List
+    collection=categoriesCollection
+    subscription='categories.byQuery'
+    query=query
+  }}
+    {{> Template.contentBlock listArgs}}
+  {{/List}}
 </template>
 
 <template name="Categories_form_insert">

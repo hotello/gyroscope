@@ -1,7 +1,11 @@
 <template name="Comments_list">
-  {{#each comment in comments}}
-    {{> Template.contentBlock comment=comment}}
-  {{/each}}
+  {{#List
+    collection=commentsCollection
+    subscription='comments.byQuery'
+    query=query
+  }}
+    {{> Template.contentBlock listArgs}}
+  {{/List}}
 </template>
 
 <template name="Comments_form_insert">

@@ -23,11 +23,50 @@ Template.body.helpers({
  */
 Template.postsList.helpers({
   query: (categoryId) => {
-    const perPage = 1;
-    return {name: 'posts.byCategory', params: { categoryId, perPage }};
+    const perPage = 5;
+    return {
+      name: 'posts.byCategory',
+      params: { categoryId, perPage }
+    };
   }
 });
 Template.postsList.events({
+  'click .js-load-more'() {
+    this.loadMore();
+  }
+});
+
+/**
+ * categoriesList
+ */
+Template.categoriesList.helpers({
+  query: () => {
+    const perPage = 5;
+    return {
+      name: 'categories.all',
+      params: { perPage }
+    };
+  }
+});
+Template.categoriesList.events({
+  'click .js-load-more'() {
+    this.loadMore();
+  }
+});
+
+/**
+ * categoriesList
+ */
+Template.commentsList.helpers({
+  query: (postId) => {
+    const perPage = 5;
+    return {
+      name: 'comments.byPost',
+      params: { postId, perPage }
+    };
+  }
+});
+Template.categoriesList.events({
   'click .js-load-more'() {
     this.loadMore();
   }

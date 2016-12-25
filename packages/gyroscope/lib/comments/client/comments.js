@@ -12,22 +12,8 @@ import './comments.html';
 /**
  * Comments_list
  */
-Template.Comments_list.onCreated(function() {
-  this.getPostId = () => Template.currentData().postId;
-
-  this.autorun(() => {
-    new SimpleSchema({
-      postId: ID_FIELD
-    }).validate(Template.currentData());
-
-    this.subscribe('comments.byPost', this.getPostId());
-  });
-});
 Template.Comments_list.helpers({
-  comments: function() {
-    const instance = Template.instance();
-    return Comments.find({postId: instance.getPostId()});
-  }
+  commentsCollection: () => Comments
 });
 
 /**
