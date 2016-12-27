@@ -38,6 +38,7 @@ describe('comments', function() {
   });
 
   describe('methods', function() {
+    const methods = Comments.methods;
     const userId = Random.id();
     let methodInvocation = {userId};
 
@@ -47,7 +48,7 @@ describe('comments', function() {
 
     it('should insert comments', function() {
       const comment = Factory.tree('comment.fromForm');
-      const result = insert._execute(methodInvocation, comment);
+      const result = methods.insert._execute(methodInvocation, comment);
 
       assert.isString(result);
     });
@@ -55,14 +56,14 @@ describe('comments', function() {
     it('should update comments', function() {
       const commentId = Factory.create('comment')._id;
       const comment = Factory.tree('comment.fromForm');
-      const result = update._execute(methodInvocation, {_id: commentId, modifier: {$set: comment}});
+      const result = methods.update._execute(methodInvocation, {_id: commentId, modifier: {$set: comment}});
 
       assert.equal(result, 1);
     });
 
     it('should remove comments', function() {
-      const commentId = Factory.create('comment')._id;
-      const result = remove._execute(methodInvocation, { commentId });
+      const docId = Factory.create('comment')._id;
+      const result = methods.remove._execute(methodInvocation, { docId });
 
       assert.equal(result, 1);
     });
@@ -89,10 +90,9 @@ describe('comments', function() {
         const post = Factory.create('post');
         const comment = Factory.create('comment', {postId: post._id});
         const commentTwo = Factory.create('comment', {postId: post._id});
-        const queryName = 'comments.byPost';
         const queryParams = {postId: post._id, limit: 1};
 
-        collector.collect('comments.byQuery', queryName, queryParams, (collections) => {
+        collector.collect('comments.byQuery', 'comments.byPost', queryParams, (collections) => {
           assert.equal(collections.comments.length, 1);
           done();
         });

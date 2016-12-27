@@ -23,13 +23,12 @@ permit.set({
   'comments.remove': always
 });
 
-extendSchema(Posts, {
+Posts.extendSchema({
   title: {type: String, max: 300, label: 'Titolo'},
   body: {type: String, max: 3000, label: 'Contenuto', autoform: {rows: 10}},
   mozzarella: {
-    type: Boolean
+    type: Boolean,
+    optional: true
   }
 });
-general.set({
-  'posts.methods.schema': ['title', 'body', 'categories', 'categories.$', 'mozzarella']
-});
+Posts.pickForMethods.push('mozzarella');

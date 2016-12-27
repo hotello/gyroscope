@@ -1,12 +1,7 @@
 import { Template } from 'meteor/templating';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { AutoForm } from 'meteor/aldeed:autoform';
-import { ReactiveDict } from 'meteor/reactive-dict';
 
-import { hooks, queries } from '../../core/settings.js';
+import { hooks } from '../../core/settings.js';
 import { Posts } from '../posts.js';
-import { generatePostsMethodsSchema } from '../methods.js';
-import { ID_FIELD } from '../../core/collections-helpers.js';
 
 import './posts.html';
 
@@ -14,40 +9,26 @@ import './posts.html';
  * Posts_list
  */
 Template.Posts_list.helpers({
-  postsCollection: () => Posts
+  collection: () => Posts
 });
 
 /**
  * Posts_item
  */
-Template.Posts_item.onCreated(function() {
-  this.getPostId = () => Template.currentData().postId;
-  this.autorun(() => {
-    new SimpleSchema({
-      postId: ID_FIELD
-    }).validate(Template.currentData());
-    // subscribe by post id
-    this.subscribe('posts.single', this.getPostId());
-  });
-});
 Template.Posts_item.helpers({
-  post(postId) {
-    return Posts.findOne(postId);
-  }
+  collection: () => Posts
 });
 
 /**
  * Posts_form_insert
  */
 Template.Posts_form_insert.helpers({
-  schema() {
-    return generatePostsMethodsSchema();
-  },
-  prefill(categoryId) {
+  collection: () => Posts,
+  getDoc: (categoryId) => {
     return categoryId ? {categories: [categoryId]} : {};
   }
 });
-AutoForm.addHooks('Posts_form_insert', {
+AutoForm.addHooks('posts.forms.insert', {
   onSuccess: function(formType, result) {
     hooks.run('posts.forms.insert.onSuccess', result);
   },
@@ -59,25 +40,10 @@ AutoForm.addHooks('Posts_form_insert', {
 /**
  * Posts_form_update
  */
-Template.Posts_form_update.onCreated(function() {
-  this.getPostId = () => Template.currentData().postId;
-  this.autorun(() => {
-    new SimpleSchema({
-      postId: ID_FIELD
-    }).validate(Template.currentData());
-    this.subscribe('posts.single', this.getPostId());
-  });
-});
 Template.Posts_form_update.helpers({
-  schema() {
-    return generatePostsMethodsSchema();
-  },
-  post() {
-    const instance = Template.instance();
-    return Posts.findOne(instance.getPostId());
-  }
+  collection: () => Posts
 });
-AutoForm.addHooks('Posts_form_update', {
+AutoForm.addHooks('posts.forms.update', {
   onSuccess: function(formType, result) {
     hooks.run('posts.forms.update.onSuccess', result);
   },

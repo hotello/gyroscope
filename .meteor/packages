@@ -13,4 +13,6 @@ ecmascript              # Enable ECMAScript2015+ syntax in app code
 
 random
 
+dburles:factory
+
 hotello:gyroscope

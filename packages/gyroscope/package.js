@@ -34,7 +34,9 @@ Package.onUse(function(api) {
     'dburles:factory@1.1.0',
     'aldeed:autoform@5.8.1',
     'mdg:validated-method@1.1.0',
-    'meteorhacks:ssr@2.2.0'
+    'meteorhacks:ssr@2.2.0',
+
+    'hotello:collection-fast@0.0.1'
   ]);
 
   api.addAssets([

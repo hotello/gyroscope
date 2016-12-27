@@ -1,58 +1,28 @@
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-
-import { permit, general } from '../core/settings.js';
+import { permit } from '../core/settings.js';
 import { Comments } from './comments.js';
-import { ID_FIELD } from '../core/collections-helpers.js';
 
-// dynamically generate the methods schema
-export const generateCommentsMethodsSchema = function() {
-  return Comments.simpleSchema().pick(general.get('comments.methods.schema'));
-};
-// accept only ids
-export const COMMENTS_ID_ONLY = new SimpleSchema({
-  commentId: ID_FIELD
+Comments.hooks.add('comments.methods.insert', function({ context, doc }) {
+  if (permit.notToDo(context.userId, 'comments.insert')) {
+    throw new Meteor.Error('comments.insert.unauthorized');
+  }
+  // set userId for comment
+  doc.userId = context.userId;
+  // return the comment
+  return doc;
 });
 
-export const insert = new ValidatedMethod({
-  name: 'comments.insert',
-  validate(comment) {
-    generateCommentsMethodsSchema().validate(comment)
-  },
-  run(comment) {
-    if (permit.notToDo(this.userId, 'comments.insert')) {
-      throw new Meteor.Error('comments.insert.unauthorized');
-    }
-    // set userId for comment
-    comment.userId = this.userId;
-
-    return Comments.insert(comment);
+Comments.hooks.add('comments.methods.update', function({ context, params }) {
+  if (permit.notToDo(context.userId, 'comments.update')) {
+    throw new Meteor.Error('comments.update.unauthorized');
   }
+  // return the params
+  return params;
 });
 
-export const update = new ValidatedMethod({
-  name: 'comments.update',
-  validate({ _id, modifier }) {
-    COMMENTS_ID_ONLY.validate({commentId: _id});
-    generateCommentsMethodsSchema().validate(modifier, {modifier: true});
-  },
-  run({ _id, modifier }) {
-    if (permit.notToDo(this.userId, 'comments.update')) {
-      throw new Meteor.Error('comments.update.unauthorized');
-    }
-
-    return Comments.update(_id, modifier);
+Comments.hooks.add('comments.methods.remove', function({ context, params }) {
+  if (permit.notToDo(context.userId, 'comments.remove')) {
+    throw new Meteor.Error('comments.remove.unauthorized');
   }
-});
-
-export const remove = new ValidatedMethod({
-  name: 'comments.remove',
-  validate: COMMENTS_ID_ONLY.validator(),
-  run({ commentId }) {
-    if (permit.notToDo(this.userId, 'comments.remove')) {
-      throw new Meteor.Error('comments.remove.unauthorized');
-    }
-
-    return Comments.remove(commentId);
-  }
+  // return commentId
+  return params;
 });

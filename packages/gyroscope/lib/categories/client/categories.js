@@ -1,11 +1,7 @@
 import { Template } from 'meteor/templating';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { AutoForm } from 'meteor/aldeed:autoform';
 
 import { hooks } from '../../core/settings.js';
 import { Categories } from '../categories.js';
-import { generateCategoriesMethodsSchema } from '../methods.js';
-import { ID_FIELD } from '../../core/collections-helpers.js';
 
 import './categories.html';
 
@@ -13,18 +9,16 @@ import './categories.html';
  * Categories_list
  */
 Template.Categories_list.helpers({
-  categoriesCollection: () => Categories
+  collection: () => Categories
 });
 
 /**
  * Categories_form_insert
  */
 Template.Categories_form_insert.helpers({
-  schema() {
-    return generateCategoriesMethodsSchema();
-  }
+  collection: () => Categories
 });
-AutoForm.addHooks('Categories_form_insert', {
+AutoForm.addHooks('categories.forms.insert', {
   onSuccess: function(formType, result) {
     hooks.run('categories.forms.insert.onSuccess', result);
   },
@@ -36,29 +30,10 @@ AutoForm.addHooks('Categories_form_insert', {
 /**
  * Categories_form_update
  */
-Template.Categories_form_update.onCreated(function() {
-  this.getCategoryId = () => Template.currentData().categoryId;
-
-  this.autorun(() => {
-    new SimpleSchema({
-      categoryId: ID_FIELD
-    }).validate(Template.currentData());
-
-    this.subscribe('categories.single', this.getCategoryId());
-  });
-});
 Template.Categories_form_update.helpers({
-  schema() {
-    return generateCategoriesMethodsSchema();
-  },
-
-  category() {
-    const instance = Template.instance();
-
-    return Categories.findOne(instance.getCategoryId());
-  }
+  collection: () => Categories
 });
-AutoForm.addHooks('Categories_form_update', {
+AutoForm.addHooks('categories.forms.update', {
   onSuccess: function(formType, result) {
     hooks.run('categories.forms.update.onSuccess', result);
   },

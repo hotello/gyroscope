@@ -1,20 +1,9 @@
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-
-import { FlexibleCollection } from '../core/flexible-collection.js';
+import { CollectionFast } from 'meteor/hotello:collection-fast';
 
 // create collection
-export const Categories = new FlexibleCollection('categories');
-
-// deny everything
-Categories.deny({
-  insert() { return true; },
-  update() { return true; },
-  remove() { return true; },
+export const Categories = new CollectionFast('categories', {
+  schema: {
+    name: {type: String, max: 100}
+  },
+  pickForMethods: ['name']
 });
-
-// generate schema
-Categories.schema = new SimpleSchema({
-  name: {type: String, max: 100}
-});
-// attach schema
-Categories.attachSchema(Categories.schema);

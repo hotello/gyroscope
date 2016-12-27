@@ -1,29 +1,18 @@
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { _ } from 'meteor/underscore';
+import { CollectionFast } from 'meteor/hotello:collection-fast';
 
-import { FlexibleCollection } from '../core/flexible-collection.js';
 import { ID_FIELD_OPT } from '../core/collections-helpers.js';
 import { Categories } from '../categories/categories.js';
 
 // create collection
-export const Posts = new FlexibleCollection('posts');
-
-// deny everything
-Posts.deny({
-  insert() { return true; },
-  update() { return true; },
-  remove() { return true; },
+export const Posts = new CollectionFast('posts', {
+  schema: {
+    title: {type: String, max: 500},
+    body: {type: String, max: 3000},
+    userId: ID_FIELD_OPT,
+    categories: {type: [String], regEx: SimpleSchema.RegEx.Id, optional: true}
+  },
+  pickForMethods: ['title', 'body', 'categories', 'categories.$']
 });
-
-// generate schema
-Posts.schema = new SimpleSchema({
-  title: {type: String, max: 500},
-  body: {type: String, max: 3000},
-  userId: ID_FIELD_OPT,
-  categories: {type: [String], regEx: SimpleSchema.RegEx.Id, optional: true}
-});
-// attach schema
-Posts.attachSchema(Posts.schema);
 
 // posts helpers
 Posts.helpers({

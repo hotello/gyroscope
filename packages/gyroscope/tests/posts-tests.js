@@ -7,11 +7,6 @@ import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 
 import { permit, queries } from '../lib/core/settings.js';
 import { Posts } from '../lib/posts/posts.js';
-import {
-  insert,
-  update,
-  remove
-} from '../lib/posts/methods.js';
 import { Categories } from '../lib/categories/categories.js';
 
 describe('posts', function() {
@@ -52,8 +47,9 @@ describe('posts', function() {
   });
 
   describe('methods', function() {
+    const methods = Posts.methods;
     const userId = Random.id();
-    let methodInvocation = {userId};
+    let methodInvocation = { userId };
 
     beforeEach(function() {
       if (Meteor.isServer) {
@@ -63,7 +59,7 @@ describe('posts', function() {
 
     it('should insert posts', function() {
       const post = Factory.tree('post.fromForm');
-      const result = insert._execute(methodInvocation, post);
+      const result = methods.insert._execute(methodInvocation, post);
 
       assert.isString(result);
     });
@@ -71,14 +67,14 @@ describe('posts', function() {
     it('should update posts', function() {
       const postId = Factory.create('post')._id;
       const post = Factory.tree('post.fromForm');
-      const result = update._execute(methodInvocation, {_id: postId, modifier: {$set: post}});
+      const result = methods.update._execute(methodInvocation, {_id: postId, modifier: {$set: post}});
 
       assert.equal(result, 1);
     });
 
     it('should remove posts', function() {
-      const postId = Factory.create('post')._id;
-      const result = remove._execute(methodInvocation, { postId });
+      const docId = Factory.create('post')._id;
+      const result = methods.remove._execute(methodInvocation, { docId });
 
       assert.equal(result, 1);
     });
@@ -91,7 +87,7 @@ describe('posts', function() {
         const postOne = Factory.create('post');
         const postTwo = Factory.create('post');
         // set the query function
-        queries.set({'posts.testQuery': function(params) {
+        Posts.queries.set({'posts.testQuery': function(params) {
           return {selector: params.selector, options: {skip: params.skip}};
         }});
         // collect publication result

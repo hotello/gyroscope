@@ -37,6 +37,7 @@ describe('categories', function() {
   });
 
   describe('methods', function() {
+    const methods = Categories.methods;
     const userId = Random.id();
     let methodInvocation = {userId};
 
@@ -46,7 +47,7 @@ describe('categories', function() {
 
     it('should insert categories', function() {
       const category = Factory.tree('category');
-      const result = insert._execute(methodInvocation, category);
+      const result = methods.insert._execute(methodInvocation, category);
 
       assert.isString(result);
     });
@@ -54,14 +55,14 @@ describe('categories', function() {
     it('should update categories', function() {
       const categoryId = Factory.create('category')._id;
       const category = Factory.tree('category');
-      const result = update._execute(methodInvocation, {_id: categoryId, modifier: {$set: category}});
+      const result = methods.update._execute(methodInvocation, {_id: categoryId, modifier: {$set: category}});
 
       assert.equal(result, 1);
     });
 
     it('should remove categories', function() {
-      const categoryId = Factory.create('category')._id;
-      const result = remove._execute(methodInvocation, { categoryId });
+      const docId = Factory.create('category')._id;
+      const result = methods.remove._execute(methodInvocation, { docId });
 
       assert.equal(result, 1);
     });
@@ -87,10 +88,9 @@ describe('categories', function() {
         const collector = new PublicationCollector();
         const category = Factory.create('category');
         const categoryTwo = Factory.create('category');
-        const queryName = 'categories.all';
         const queryParams = {limit: 1};
 
-        collector.collect('categories.byQuery', queryName, queryParams, (collections) => {
+        collector.collect('categories.byQuery', 'categories.all', queryParams, (collections) => {
           assert.equal(collections.categories.length, 1);
           done();
         });

@@ -1,11 +1,7 @@
 import { Template } from 'meteor/templating';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { AutoForm } from 'meteor/aldeed:autoform';
 
 import { hooks } from '../../core/settings.js';
 import { Comments } from '../comments.js';
-import { generateCommentsMethodsSchema } from '../methods.js';
-import { ID_FIELD } from '../../core/collections-helpers.js';
 
 import './comments.html';
 
@@ -13,29 +9,19 @@ import './comments.html';
  * Comments_list
  */
 Template.Comments_list.helpers({
-  commentsCollection: () => Comments
+  collection: () => Comments
 });
 
 /**
  * Comments_form_insert
  */
-Template.Comments_form_insert.onCreated(function() {
-  this.autorun(() => {
-    new SimpleSchema({
-      postId: ID_FIELD
-    }).validate(Template.currentData());
-  });
-});
 Template.Comments_form_insert.helpers({
-  schema() {
-    return generateCommentsMethodsSchema();
-  },
-
-  prefill(postId) {
+  collection: () => Comments,
+  getDoc: (postId) => {
     return postId ? {postId: postId} : {};
   }
 });
-AutoForm.addHooks('Comments_form_insert', {
+AutoForm.addHooks('comments.forms.insert', {
   onSuccess: function(formType, result) {
     hooks.run('comments.forms.insert.onSuccess', result);
   },
@@ -47,29 +33,10 @@ AutoForm.addHooks('Comments_form_insert', {
 /**
  * Comments_form_update
  */
-Template.Comments_form_update.onCreated(function() {
-  this.getCommentId = () => Template.currentData().commentId;
-
-  this.autorun(() => {
-    new SimpleSchema({
-      commentId: ID_FIELD
-    }).validate(Template.currentData());
-
-    this.subscribe('comments.single', this.getCommentId());
-  });
-});
 Template.Comments_form_update.helpers({
-  schema() {
-    return generateCommentsMethodsSchema();
-  },
-
-  comment() {
-    const instance = Template.instance();
-
-    return Comments.findOne(instance.getCommentId());
-  }
+  collection: () => Comments
 });
-AutoForm.addHooks('Comments_form_update', {
+AutoForm.addHooks('comments.forms.update', {
   onSuccess: function(formType, result) {
     hooks.run('comments.forms.update.onSuccess', result);
   },

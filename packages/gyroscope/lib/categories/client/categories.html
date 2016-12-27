@@ -1,6 +1,6 @@
 <template name="Categories_list">
   {{#List
-    collection=categoriesCollection
+    collection=collection
     subscription='categories.byQuery'
     query=query
   }}
@@ -9,21 +9,9 @@
 </template>
 
 <template name="Categories_form_insert">
-  {{> quickForm
-    schema=schema
-    id="Categories_form_insert"
-    type="method"
-    meteormethod="categories.insert"
-  }}
+  {{> Form_insert collection=collection}}
 </template>
 
 <template name="Categories_form_update">
-  {{> quickForm
-    schema=schema
-    id="Categories_form_update"
-    doc=category
-    type="method-update"
-    meteormethod="categories.update"
-    singleMethodArgument=true
-  }}
+  {{> Form_update collection=collection documentId=categoryId}}
 </template>

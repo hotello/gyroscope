@@ -7,6 +7,9 @@ import {
   general,
   hooks
 } from 'meteor/hotello:gyroscope';
+import faker from 'faker';
+import { Factory } from 'meteor/dburles:factory';
+import { _ } from 'meteor/underscore';
 
 // pass enclosing app assets object to gyroscope package
 general.set({
@@ -72,4 +75,40 @@ Meteor.publish('comments.random', function() {
   const post = Posts.findOne();
   Comments.update(comment._id, {$set: {postId: post._id}});
   return comments;
+});
+
+// generate some demo data
+Factory.define('post', Posts, {
+  title: () => faker.lorem.sentence(),
+  body: () => faker.lorem.paragraphs(),
+  userId: () => Random.id(),
+  categories: () => [Random.id()]
+});
+Factory.define('category', Categories, {
+  name: () => faker.lorem.words()
+});
+Factory.define('comment', Comments, {
+  body: () => faker.lorem.sentence(),
+  userId: () => Random.id(),
+  postId: () => Random.id()
+});
+
+Meteor.startup(function() {
+  if(!Posts.findOne()) {
+    _.times(25, function() {
+      Factory.create('post');
+    });
+  }
+
+  if(!Categories.findOne()) {
+    _.times(10, function() {
+      Factory.create('category');
+    });
+  }
+
+  if(!Comments.findOne()) {
+    _.times(10, function() {
+      Factory.create('comment');
+    });
+  }
 });

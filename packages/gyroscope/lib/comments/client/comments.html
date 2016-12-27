@@ -1,6 +1,6 @@
 <template name="Comments_list">
   {{#List
-    collection=commentsCollection
+    collection=collection
     subscription='comments.byQuery'
     query=query
   }}
@@ -9,22 +9,9 @@
 </template>
 
 <template name="Comments_form_insert">
-  {{> quickForm
-    schema=schema
-    id="Comments_form_insert"
-    doc=(prefill postId)
-    type="method"
-    meteormethod="comments.insert"
-  }}
+  {{> Form_insert collection=collection doc=(getDoc postId)}}
 </template>
 
 <template name="Comments_form_update">
-  {{> quickForm
-    schema=schema
-    id="Comments_form_update"
-    doc=comment
-    type="method-update"
-    meteormethod="comments.update"
-    singleMethodArgument=true
-  }}
+  {{> Form_update collection=collection documentId=commentId}}
 </template>

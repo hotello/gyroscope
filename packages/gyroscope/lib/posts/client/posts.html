@@ -1,6 +1,6 @@
 <template name="Posts_list">
   {{#List
-    collection=postsCollection
+    collection=collection
     subscription='posts.byQuery'
     query=query
   }}
@@ -9,26 +9,18 @@
 </template>
 
 <template name="Posts_item">
-  {{> Template.contentBlock post=(post postId)}}
+  {{#Document
+    collection=collection
+    documentId=postId
+  }}
+    {{> Template.contentBlock post=document}}
+  {{/Document}}
 </template>
 
 <template name="Posts_form_insert">
-  {{> quickForm
-    schema=schema
-    id="Posts_form_insert"
-    doc=(prefill categoryId)
-    type="method"
-    meteormethod="posts.insert"
-  }}
+  {{> Form_insert collection=collection doc=(getDoc categoryId)}}
 </template>
 
 <template name="Posts_form_update">
-  {{> quickForm
-    schema=schema
-    id="Posts_form_update"
-    doc=post
-    type="method-update"
-    meteormethod="posts.update"
-    singleMethodArgument=true
-  }}
+  {{> Form_update collection=collection documentId=postId}}
 </template>

@@ -1,5 +1,11 @@
+// register api
+import './lib/posts/methods.js';
+import './lib/posts/queries.js';
+import './lib/categories/methods.js';
+import './lib/categories/queries.js';
+import './lib/comments/methods.js';
+import './lib/comments/queries.js';
 // register components
-import './lib/core/client/list.js';
 import './lib/posts/client/posts.js';
 import './lib/categories/client/categories.js';
 import './lib/comments/client/comments.js';

@@ -4,6 +4,7 @@ import { _ } from 'meteor/underscore';
 import { hooks } from '../core/settings.js';
 import { Categories } from '../categories/categories.js';
 import { Posts } from '../posts/posts.js';
+import { Comments } from '../comments/comments.js';
 
 export const notifyPostOnComment = function(comment, post) {
   return post.notify('comments.insert', { comment, without: [post.userId] });
@@ -23,21 +24,21 @@ const addSubscriberToPost = function(postId, userId) {
 };
 
 // add notification on post insert
-hooks.add('posts.insert.after', function(post) {
+Posts.hooks.add('posts.insert.after', function(post) {
   // notify all users subscribed to post's categories
   notifyCategoryOnPost(post);
   // remember to always return on hooks
   return post;
 });
 // add post's user to subscribers on post insert
-hooks.add('posts.insert.after', function(post) {
+Posts.hooks.add('posts.insert.after', function(post) {
   if (post && _.has(post, 'userId')) addSubscriberToPost(post._id, post.userId);
   // remember to always return on hooks
   return post;
 });
 
 // add notification on comment insert and add user to post's subscribers
-hooks.add('comments.insert.after', function(comment) {
+Comments.hooks.add('comments.insert.after', function(comment) {
   const post = Posts.findOne(comment.postId);
   // notify post's room
   if (post) notifyPostOnComment(comment, post);
