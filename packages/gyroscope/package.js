@@ -36,7 +36,7 @@ Package.onUse(function(api) {
     'mdg:validated-method@1.1.0',
     'meteorhacks:ssr@2.2.0',
 
-    'hotello:collection-fast@0.0.1'
+    'hotello:collection-fast@1.0.0'
   ]);
 
   api.addAssets([
