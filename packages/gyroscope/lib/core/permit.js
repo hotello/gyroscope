@@ -1,6 +1,6 @@
 import { _ } from 'meteor/underscore';
+import { FunctionsDict } from 'meteor/hotello:useful-dicts';
 
-import { FunctionsDict } from './functions-dict.js';
 import { ID_FIELD_OPT } from './collections-helpers.js';
 
 export class Permit extends FunctionsDict {

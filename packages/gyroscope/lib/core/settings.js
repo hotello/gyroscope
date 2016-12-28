@@ -1,12 +1,15 @@
+import {
+  Dict,
+  HooksDict,
+  StringsDict,
+  FunctionsDict
+} from 'meteor/hotello:useful-dicts';
+
 import { config } from './config.js';
-import { Dict } from './dict.js';
-import { StringsDict } from './strings-dict.js';
-import { FunctionsDict } from './functions-dict.js';
 import { Permit } from './permit.js';
-import { Hooks } from './hooks.js';
 
 export const general = new Dict(config.general);
 export const permit = new Permit(config.permit);
 export const notifications = new FunctionsDict(config.notifications);
-export const hooks = new Hooks({});
+export const hooks = new HooksDict();
 export const queries = new FunctionsDict(config.queries);

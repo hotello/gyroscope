@@ -1,7 +1,4 @@
-import { Meteor } from 'meteor/meteor';
-
 import { permit } from '../../core/settings.js';
-import { ID_FIELD } from '../../core/collections-helpers.js';
 import { Comments } from '../comments.js';
 
 Comments.hooks.add('comments.publish.byQuery', function({ context, queryParams }) {

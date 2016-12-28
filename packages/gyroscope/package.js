@@ -36,6 +36,7 @@ Package.onUse(function(api) {
     'mdg:validated-method@1.1.0',
     'meteorhacks:ssr@2.2.0',
 
+    'hotello:useful-dicts@1.0.0',
     'hotello:collection-fast@1.0.0'
   ]);
 
@@ -52,7 +53,7 @@ Package.onTest(function(api) {
 
   api.use([
     'ecmascript',
-    'practicalmeteor:mocha',
+    'practicalmeteor:mocha@2.4.5_6',
     'xolvio:cleaner',
     'johanbrook:publication-collector'
   ]);
