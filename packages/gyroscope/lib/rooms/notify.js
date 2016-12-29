@@ -16,6 +16,7 @@ const notify = function(userIds, notification, data) {
   // omit some subscribers
   if (_.has(data, 'without')) {
     userIds = _.difference(userIds, data.without);
+    data = _.omit(data, 'without')
   }
   // fetch users only once
   users = hooks.run('notify.fetchUsers', userIds);

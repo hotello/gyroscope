@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { assert } from 'meteor/practicalmeteor:chai';
+import { _ } from 'meteor/underscore';
 import { Mongo } from 'meteor/mongo';
 import { Random } from 'meteor/random';
 import { Factory } from 'meteor/dburles:factory';
@@ -119,7 +120,10 @@ describe('rooms', function() {
     if (Meteor.isServer) {
       before(function() {
         notifications.set({
-          'test.notification': new Function()
+          'test.notification': function(data) {
+            assert.property(data, 'user');
+            assert.property(data, 'document');
+          }
         });
       });
       beforeEach(function() {
@@ -129,7 +133,7 @@ describe('rooms', function() {
 
       it('should notify subscribers in a room', function() {
         const room = Factory.create('room');
-        assert.isArray(room.notify('test.notification', {}));
+        assert.isArray(room.notify('test.notification', {document: {}}));
       });
 
       it('should omit some subscribers', function() {
@@ -138,28 +142,38 @@ describe('rooms', function() {
         // add another id to post's room
         post.addSubscriber(Random.id());
         assert.lengthOf(post.room().subscribers, 2);
-        assert.lengthOf(post.notify('test.notification', {without: [post.userId]}), 1);
+        assert.lengthOf(post.notify('test.notification', {document: {}, without: [post.userId]}), 1);
       });
 
       it('should notify subscribers of a category', function() {
         const category = Factory.create('category');
         // notifications need subscribers
         category.room().addSubscriber(Random.id());
-        assert.isArray(category.notify('test.notification', {}));
+        assert.isArray(category.notify('test.notification', {document: {}}));
       });
 
       it('should notify category\'s room on post', function() {
         const category = Factory.create('category');
         const id = Random.id();
+        notifications.set({
+          'posts.insert': function(data) {
+            assert.property(data, 'post');
+            assert.property(data, 'user');
+          }
+        });
         category.addSubscriber(id); // add subscriber to category
         const post = Factory.create('post', {categories: [category._id]});
-        // TODO!!!
-        // assert.equal(notifyCategoryOnPost(post), [id]);
       });
 
       it('should notify post\'s room on comment, but not post\'s author', function() {
         const post = Factory.create('post');
         const postOwnerComment = Factory.create('comment', {postId: post._id, userId: post.userId});
+        notifications.set({
+          'comments.insert': function(data) {
+            assert.property(data, 'comment');
+            assert.property(data, 'user');
+          }
+        });
         const userComment = Factory.create('comment', {postId: post._id});
         assert.lengthOf(post.room().subscribers, 2);
         assert.equal(notifyPostOnComment(postOwnerComment, post)[0], userComment.userId);

@@ -9,7 +9,7 @@ export const notifyPostOnComment = function(comment, post) {
   return post.notify('comments.insert', { comment, without: [post.userId] });
 };
 export const notifyCategoryOnPost = function(post) {
-  if (_.has(post, 'categories')) {
+  if (post && _.has(post, 'categories')) {
     _.each(post.categories, (categoryId) => {
       const category = Categories.findOne(categoryId);
       if (category) category.notify('posts.insert', { post });
@@ -23,19 +23,20 @@ const addSubscriberToPost = function(postId, userId) {
 };
 
 // add notification on post insert
-Posts.hooks.add('posts.insert.after', function(post) {
+Posts.hooks.add('posts.insert.after', function({ result, doc }) {
+  // set id on doc
+  doc._id = result;
   // notify all users subscribed to post's categories
-  notifyCategoryOnPost(post);
+  notifyCategoryOnPost(doc);
   // remember to always return on hooks
-  return post;
+  return { result, doc };
 });
 // add post's user to subscribers on post insert
 Posts.hooks.add('posts.insert.after', function({ result, doc }) {
-  const post = doc;
   // add subscriber
-  if (post && _.has(post, 'userId')) addSubscriberToPost(post._id, post.userId);
+  if (doc && _.has(doc, 'userId')) addSubscriberToPost(doc._id, doc.userId);
   // remember to always return on hooks
-  return { result, post };
+  return { result, doc };
 });
 
 // add notification on comment insert and add user to post's subscribers
@@ -47,5 +48,5 @@ Comments.hooks.add('comments.insert.after', function({ result, doc }) {
   // add user to post's subscribers
   if (post && _.has(comment, 'postId')) addSubscriberToPost(post._id, comment.userId);
   // remember to always return on hooks
-  return { result, comment };
+  return { result, doc };
 });
