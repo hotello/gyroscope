@@ -62,7 +62,7 @@ describe('categories', function() {
 
     it('should remove categories', function() {
       const docId = Factory.create('category')._id;
-      const result = methods.remove._execute(methodInvocation, { docId });
+      const result = methods.remove._execute(methodInvocation, docId);
 
       assert.equal(result, 1);
     });

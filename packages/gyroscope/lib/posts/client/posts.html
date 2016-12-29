@@ -1,7 +1,6 @@
 <template name="Posts_list">
   {{#List
     collection=collection
-    subscription='posts.byQuery'
     query=query
   }}
     {{> Template.contentBlock listArgs}}

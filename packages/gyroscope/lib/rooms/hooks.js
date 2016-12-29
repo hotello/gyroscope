@@ -30,14 +30,17 @@ Posts.hooks.add('posts.insert.after', function(post) {
   return post;
 });
 // add post's user to subscribers on post insert
-Posts.hooks.add('posts.insert.after', function(post) {
+Posts.hooks.add('posts.insert.after', function(postId) {
+  post = Posts.findOne(postId);
+  // add subscriber
   if (post && _.has(post, 'userId')) addSubscriberToPost(post._id, post.userId);
   // remember to always return on hooks
   return post;
 });
 
 // add notification on comment insert and add user to post's subscribers
-Comments.hooks.add('comments.insert.after', function(comment) {
+Comments.hooks.add('comments.insert.after', function(commentId) {
+  const comment = Comments.findOne(commentId);
   const post = Posts.findOne(comment.postId);
   // notify post's room
   if (post) notifyPostOnComment(comment, post);

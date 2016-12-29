@@ -1,18 +1,16 @@
 import { permit } from '../../core/settings.js';
 import { Comments } from '../comments.js';
 
-Comments.hooks.add('comments.publish.byQuery', function({ context, queryParams }) {
-  if (permit.notToDo(context.userId, 'comments.publish.byQuery', { queryParams })) {
+Comments.hooks.add('comments.publish.byQuery', function({ context, name, params }) {
+  if (permit.notToDo(context.userId, 'comments.publish.byQuery', { name, params })) {
     return context.ready();
   }
-
-  return queryParams;
+  return { context, name, params };
 });
 
-Comments.hooks.add('comments.publish.single', function({ context, documentId }) {
-  if (permit.notToDo(context.userId, 'comments.publish.single', { documentId })) {
+Comments.hooks.add('comments.publish.single', function({ context, _id }) {
+  if (permit.notToDo(context.userId, 'comments.publish.single', { _id })) {
     return context.ready();
   }
-
-  return documentId;
+  return { context, _id };
 });

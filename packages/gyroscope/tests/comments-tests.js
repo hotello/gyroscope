@@ -63,7 +63,7 @@ describe('comments', function() {
 
     it('should remove comments', function() {
       const docId = Factory.create('comment')._id;
-      const result = methods.remove._execute(methodInvocation, { docId });
+      const result = methods.remove._execute(methodInvocation, docId);
 
       assert.equal(result, 1);
     });
