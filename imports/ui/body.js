@@ -25,7 +25,7 @@ Template.postsList.helpers({
   query: (categoryId) => {
     const perPage = 5;
     return {
-      name: 'posts.byCategory',
+      name: 'byCategory',
       params: { categoryId, perPage }
     };
   }
@@ -43,7 +43,7 @@ Template.categoriesList.helpers({
   query: () => {
     const perPage = 5;
     return {
-      name: 'categories.all',
+      name: 'all',
       params: { perPage }
     };
   }
@@ -61,7 +61,7 @@ Template.commentsList.helpers({
   query: (postId) => {
     const perPage = 5;
     return {
-      name: 'comments.byPost',
+      name: 'byPost',
       params: { postId, perPage }
     };
   }

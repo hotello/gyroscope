@@ -92,7 +92,7 @@ describe('comments', function() {
         const commentTwo = Factory.create('comment', {postId: post._id});
         const queryParams = {postId: post._id, limit: 1};
 
-        collector.collect('comments.byQuery', 'comments.byPost', queryParams, (collections) => {
+        collector.collect('comments.byQuery', 'byPost', queryParams, (collections) => {
           assert.equal(collections.comments.length, 1);
           done();
         });

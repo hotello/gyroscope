@@ -1,10 +1,10 @@
 Package.describe({
   name: 'hotello:gyroscope',
-  version: '0.0.1',
+  version: '0.1.1',
   // Brief, one-line summary of the package.
-  summary: '',
+  summary: 'Extensible social components like posts, comments and more.',
   // URL to the Git repository containing the source code for this package.
-  git: '',
+  git: 'https://github.com/hotello/gyroscope.git',
   // By default, Meteor will default to using README.md for documentation.
   // To avoid submitting documentation, set this field to null.
   documentation: 'README.md'
@@ -17,7 +17,7 @@ Package.onUse(function(api) {
     'meteor-base@1.0.4',
     'mobile-experience@1.0.4',
     'mongo@1.1.14',
-    'blaze-html-templates',
+    'blaze-html-templates@1.0.5',
     'reactive-var@1.0.11',
     'reactive-dict@1.1.8',
     'jquery@1.11.10',
@@ -36,8 +36,8 @@ Package.onUse(function(api) {
     'mdg:validated-method@1.1.0',
     'meteorhacks:ssr@2.2.0',
 
-    'hotello:useful-dicts@1.0.0',
-    'hotello:collection-fast@1.0.0'
+    'hotello:useful-dicts@1.0.2',
+    'hotello:collection-fast@1.2.0'
   ]);
 
   api.addAssets([
@@ -52,10 +52,9 @@ Package.onTest(function(api) {
   api.use('hotello:gyroscope');
 
   api.use([
-    'ecmascript',
+    'ecmascript@0.6.1',
     'practicalmeteor:mocha@2.4.5_6',
-    'xolvio:cleaner',
-    'johanbrook:publication-collector'
+    'johanbrook:publication-collector@1.0.5'
   ]);
 
   api.addFiles([

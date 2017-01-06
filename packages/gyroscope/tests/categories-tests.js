@@ -90,7 +90,7 @@ describe('categories', function() {
         const categoryTwo = Factory.create('category');
         const queryParams = {limit: 1};
 
-        collector.collect('categories.byQuery', 'categories.all', queryParams, (collections) => {
+        collector.collect('categories.byQuery', 'all', queryParams, (collections) => {
           assert.equal(collections.categories.length, 1);
           done();
         });

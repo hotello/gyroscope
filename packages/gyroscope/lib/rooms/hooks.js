@@ -23,7 +23,7 @@ const addSubscriberToPost = function(postId, userId) {
 };
 
 // add notification on post insert
-Posts.hooks.add('posts.insert.after', function({ result, doc }) {
+Posts.hooks.add('insert.after', function({ result, doc }) {
   // set id on doc
   doc._id = result;
   // notify all users subscribed to post's categories
@@ -32,7 +32,7 @@ Posts.hooks.add('posts.insert.after', function({ result, doc }) {
   return { result, doc };
 });
 // add post's user to subscribers on post insert
-Posts.hooks.add('posts.insert.after', function({ result, doc }) {
+Posts.hooks.add('insert.after', function({ result, doc }) {
   // add subscriber
   if (doc && _.has(doc, 'userId')) addSubscriberToPost(doc._id, doc.userId);
   // remember to always return on hooks
@@ -40,7 +40,7 @@ Posts.hooks.add('posts.insert.after', function({ result, doc }) {
 });
 
 // add notification on comment insert and add user to post's subscribers
-Comments.hooks.add('comments.insert.after', function({ result, doc }) {
+Comments.hooks.add('insert.after', function({ result, doc }) {
   const comment = doc;
   const post = Posts.findOne(comment.postId);
   // notify post's room

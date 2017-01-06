@@ -1,7 +1,7 @@
 import { Posts } from './posts.js';
 
 Posts.queries.set({
-  'posts.byCategory': function(params) {
+  'byCategory': function(params) {
     const MAX_TODOS = 1000;
     return {
       selector: {categories: {$in: [params.categoryId]}},

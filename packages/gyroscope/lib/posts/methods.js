@@ -1,7 +1,7 @@
 import { permit } from '../core/settings.js';
 import { Posts } from './posts.js';
 
-Posts.hooks.add('posts.methods.insert', function({ context, doc }) {
+Posts.hooks.add('methods.insert', function({ context, doc }) {
   if (permit.notToDo(context.userId, 'posts.insert', doc)) {
     throw new Meteor.Error('posts.insert.unauthorized');
   }
@@ -10,14 +10,14 @@ Posts.hooks.add('posts.methods.insert', function({ context, doc }) {
   return { context, doc };
 });
 
-Posts.hooks.add('posts.methods.update', function({ context, params }) {
-  if (permit.notToDo(context.userId, 'posts.update', params)) {
+Posts.hooks.add('methods.update', function({ context, _id, modifier }) {
+  if (permit.notToDo(context.userId, 'posts.update', { _id, modifier })) {
     throw new Meteor.Error('posts.update.unauthorized');
   }
-  return { context, params };
+  return { context, _id, modifier };
 });
 
-Posts.hooks.add('posts.methods.remove', function({ context, _id }) {
+Posts.hooks.add('methods.remove', function({ context, _id }) {
   if (permit.notToDo(context.userId, 'posts.remove', { _id })) {
     throw new Meteor.Error('posts.remove.unauthorized');
   }

@@ -1,7 +1,7 @@
 import { Categories } from './categories.js';
 
 Categories.queries.set({
-  'categories.all': function(params) {
+  'all': function(params) {
     const MAX_CATEGORIES = 1000;
     return {
       selector: {},
