@@ -1,18 +1,12 @@
 <template name="Posts_list">
-  {{#List
-    collection=collection
-    query=query
-  }}
+  {{#List collection=collection query=query}}
     {{> Template.contentBlock listArgs}}
   {{/List}}
 </template>
 
 <template name="Posts_item">
-  {{#Document
-    collection=collection
-    documentId=postId
-  }}
-    {{> Template.contentBlock post=document}}
+  {{#Document collection=collection documentId=postId}}
+    {{> Template.contentBlock documentArgs}}
   {{/Document}}
 </template>
 

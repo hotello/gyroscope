@@ -67,34 +67,4 @@ describe('categories', function() {
       assert.equal(result, 1);
     });
   });
-
-  describe('publications', function() {
-    if (Meteor.isServer) {
-      beforeEach(function() {
-        Categories.remove({});
-      });
-
-      it('should send a single category', function (done) {
-        const collector = new PublicationCollector();
-        const category = Factory.create('category');
-
-        collector.collect('categories.single', category._id, (collections) => {
-          assert.equal(collections.categories.length, 1);
-          done();
-        });
-      });
-
-      it('should send all categories', function (done) {
-        const collector = new PublicationCollector();
-        const category = Factory.create('category');
-        const categoryTwo = Factory.create('category');
-        const queryParams = {limit: 1};
-
-        collector.collect('categories.byQuery', 'all', queryParams, (collections) => {
-          assert.equal(collections.categories.length, 1);
-          done();
-        });
-      });
-    }
-  });
 });

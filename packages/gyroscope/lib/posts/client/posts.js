@@ -28,26 +28,10 @@ Template.Posts_form_insert.helpers({
     return categoryId ? {categories: [categoryId]} : {};
   }
 });
-AutoForm.addHooks('posts.forms.insert', {
-  onSuccess: function(formType, result) {
-    hooks.run('posts.forms.insert.onSuccess', result);
-  },
-  onError: function(formType, error) {
-    hooks.run('posts.forms.insert.onError', error);
-  }
-});
 
 /**
  * Posts_form_update
  */
 Template.Posts_form_update.helpers({
   collection: () => Posts
-});
-AutoForm.addHooks('posts.forms.update', {
-  onSuccess: function(formType, result) {
-    hooks.run('posts.forms.update.onSuccess', result);
-  },
-  onError: function(formType, error) {
-    hooks.run('posts.forms.update.onError', error);
-  }
 });

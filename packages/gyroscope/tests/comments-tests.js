@@ -22,17 +22,38 @@ describe('comments', function() {
         Posts.remove({});
       });
 
-      it('should insert comment with auto values', function() {
-        const comment = Factory.create('comment');
+      it('should insert comment with denormalizers', function() {
+        const post = Factory.create('post');
+        const comment = Factory.create('comment', {postId: post._id});
         // check for insert
         assert.isObject(Comments.findOne());
+        // check if comment counter is incremented
+        assert.equal(Posts.findOne(post._id).commentCount, 1);
       });
 
-      it('should alter comments with auto values', function() {
+      it('should update comments with denormalizers', function() {
         const comment = Factory.create('comment');
         // check update
         const updateResult = Comments.update(comment._id, {$set: Factory.tree('comment')});
         assert.equal(updateResult, 1);
+      });
+
+      it('should delete comments with denormalizers', function() {
+        const post = Factory.create('post');
+        const comment = Factory.create('comment', {postId: post._id});
+        // check update
+        const result = Comments.remove(comment._id);
+        assert.equal(result, 1);
+        // check for comment counter decrement
+        assert.equal(Posts.findOne(post._id).commentCount, 0);
+      });
+
+      describe('helpers', function() {
+        it('should get comment\'s post', function() {
+          const post = Factory.create('post');
+          const comment = Factory.create('comment', {postId: post._id});
+          assert.equal(comment.post()._id, post._id);
+        });
       });
     }
   });
@@ -67,36 +88,5 @@ describe('comments', function() {
 
       assert.equal(result, 1);
     });
-  });
-
-  describe('publications', function() {
-    if (Meteor.isServer) {
-      beforeEach(function() {
-        Comments.remove({});
-      });
-
-      it('should send a single comment', function (done) {
-        const collector = new PublicationCollector();
-        const comment = Factory.create('comment');
-
-        collector.collect('comments.single', comment._id, (collections) => {
-          assert.equal(collections.comments.length, 1);
-          done();
-        });
-      });
-
-      it('should send comments by post', function (done) {
-        const collector = new PublicationCollector();
-        const post = Factory.create('post');
-        const comment = Factory.create('comment', {postId: post._id});
-        const commentTwo = Factory.create('comment', {postId: post._id});
-        const queryParams = {postId: post._id, limit: 1};
-
-        collector.collect('comments.byQuery', 'byPost', queryParams, (collections) => {
-          assert.equal(collections.comments.length, 1);
-          done();
-        });
-      });
-    }
   });
 });

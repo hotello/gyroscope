@@ -1,10 +1,12 @@
 // register api
 import './lib/posts/methods.js';
 import './lib/posts/queries.js';
+import './lib/posts/denormalizers.js';
 import './lib/categories/methods.js';
 import './lib/categories/queries.js';
 import './lib/comments/methods.js';
 import './lib/comments/queries.js';
+import './lib/comments/denormalizers.js';
 // register components
 import './lib/posts/client/posts.js';
 import './lib/categories/client/categories.js';

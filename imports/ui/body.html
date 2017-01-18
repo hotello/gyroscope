@@ -24,8 +24,14 @@
   {{#if Template.subscriptionsReady}}
     {{#if post}}
       {{#Posts_item postId=post._id}}
-        <h4>{{post.title}}</h4>
-        <p>{{post.body}}</p>
+        <h4>{{document.title}}</h4>
+        <p>{{document.body}}</p>
+        {{#if loading}}
+          <p>Loading post...</p>
+        {{/if}}
+        {{#if noResults}}
+          <p>Post not found.</p>
+        {{/if}}
       {{/Posts_item }}
     {{/if}}
   {{/if}}
@@ -68,7 +74,9 @@
     {{#if loading}}
       <p>Loading...</p>
     {{/if}}
-    <button class="js-load-more">Load More...</button>
+    {{#if hasMore}}
+      <button class="js-load-more">Load More...</button>
+    {{/if}}
   {{/Posts_list}}
 </template>
 
@@ -83,7 +91,9 @@
     {{#if loading}}
       <p>Loading...</p>
     {{/if}}
-    <button class="js-load-more">Load More...</button>
+    {{#if hasMore}}
+      <button class="js-load-more">Load More...</button>
+    {{/if}}
   {{/Categories_list}}
 </template>
 
@@ -98,6 +108,8 @@
     {{#if loading}}
       <p>Loading...</p>
     {{/if}}
-    <button class="js-load-more">Load More...</button>
+    {{#if hasMore}}
+      <button class="js-load-more">Load More...</button>
+    {{/if}}
   {{/Comments_list}}
 </template>

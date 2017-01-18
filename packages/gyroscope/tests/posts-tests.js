@@ -8,6 +8,7 @@ import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 import { permit, queries } from '../lib/core/settings.js';
 import { Posts } from '../lib/posts/posts.js';
 import { Categories } from '../lib/categories/categories.js';
+import { Comments } from '../lib/comments/comments.js';
 
 describe('posts', function() {
   describe('collection', function() {
@@ -15,20 +16,28 @@ describe('posts', function() {
       beforeEach(function() {
         Posts.remove({});
         Categories.remove({});
+        Comments.remove({});
       });
 
-      it('should insert post with auto values', function() {
+      it('should insert post with denormalizers', function() {
         const post = Factory.create('post');
         assert.isObject(Posts.findOne(post._id));
       });
 
-      it('should alter posts with auto values', function() {
+      it('should update posts with denormalizers', function() {
         const post = Factory.create('post');
         const updateResult = Posts.update(post._id, {$set: Factory.tree('post')});
         assert.equal(updateResult, 1);
-        // check upsert
-        const upsertResult = Posts.upsert(post._id, {$set: Factory.tree('post')});
-        assert.equal(upsertResult.numberAffected, 1);
+      });
+
+      it('should delete posts with denormalizers', function() {
+        const post = Factory.create('post');
+        const comment = Factory.create('comment', {postId: post._id});
+        // check update
+        const result = Posts.remove(post._id);
+        assert.equal(result, 1);
+        // check for comment counter decrement
+        assert.isUndefined(Comments.findOne({postId: post._id}));
       });
 
       describe('helpers', function() {
@@ -78,34 +87,5 @@ describe('posts', function() {
 
       assert.equal(result, 1);
     });
-  });
-
-  describe('publications', function() {
-    if (Meteor.isServer) {
-      it('should send posts by query', function (done) {
-        const collector = new PublicationCollector();
-        const postOne = Factory.create('post');
-        const postTwo = Factory.create('post');
-        // set the query function
-        Posts.queries.set({'posts.testQuery': function(params) {
-          return {selector: params.selector, options: {skip: params.skip}};
-        }});
-        // collect publication result
-        collector.collect('posts.byQuery', 'posts.testQuery', {selector: {}, skip: 1}, (collections) => {
-          assert.equal(collections.posts.length, 1);
-          done();
-        });
-      });
-
-      it('should send a single post', function (done) {
-        const collector = new PublicationCollector();
-        const post = Factory.create('post');
-
-        collector.collect('posts.single', post._id, (collections) => {
-          assert.equal(collections.posts.length, 1);
-          done();
-        });
-      });
-    }
   });
 });

@@ -9,7 +9,8 @@ export const Posts = new CollectionFast('posts', {
     title: {type: String, max: 500},
     body: {type: String, max: 3000},
     userId: ID_FIELD_OPT,
-    categories: {type: [String], regEx: SimpleSchema.RegEx.Id, optional: true}
+    categories: {type: [String], regEx: SimpleSchema.RegEx.Id, optional: true},
+    commentCount: {type: Number}
   },
   pickForMethods: ['title', 'body', 'categories', 'categories.$']
 });

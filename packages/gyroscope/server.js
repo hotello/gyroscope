@@ -7,12 +7,14 @@ import './lib/rooms/hooks.js';
 import './lib/posts/server/publications.js';
 import './lib/posts/methods.js';
 import './lib/posts/queries.js';
+import './lib/posts/denormalizers.js';
 import './lib/categories/server/publications.js';
 import './lib/categories/methods.js';
 import './lib/categories/queries.js';
 import './lib/comments/server/publications.js';
 import './lib/comments/methods.js';
 import './lib/comments/queries.js';
+import './lib/comments/denormalizers.js';
 
 // exports
 import {
