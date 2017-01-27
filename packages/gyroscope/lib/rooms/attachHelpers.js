@@ -4,11 +4,7 @@ import { Rooms } from './rooms.js';
 
 const addSubscriptionToUser = function(userId, documentId) {
   if (!Meteor.users) return false;
-  if (!_.isArray(this.subscriptions)) {
-    return Meteor.users.update(userId, {$set: {subscriptions: [documentId]}});
-  } else {
-    return Meteor.users.update(userId, {$addToSet: {subscriptions: documentId}});
-  }
+  return Meteor.users.update(userId, {$addToSet: {subscriptions: documentId}});
 };
 const removeSubscriptionFromUser = function(userId, documentId) {
   if (!Meteor.users) return false;

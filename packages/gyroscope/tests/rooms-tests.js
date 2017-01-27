@@ -106,6 +106,19 @@ describe('rooms', function() {
         Meteor.users.remove({});
       });
 
+      it('should add subscriptions to users, no duplicates, and remove', function() {
+        const user = Factory.create('user');
+        const categoryOne = Factory.create('category');
+        const categoryTwo = Factory.create('category');
+        categoryOne.addSubscriber(user._id);
+        categoryTwo.addSubscriber(user._id);
+        categoryTwo.addSubscriber(user._id);
+        assert.lengthOf(Meteor.users.findOne(user._id).subscriptions, 2);
+        categoryOne.removeSubscriber(user._id);
+        categoryTwo.removeSubscriber(user._id);
+        assert.lengthOf(Meteor.users.findOne(user._id).subscriptions, 0);
+      });
+
       it('should add a user to a document\'s room', function() {
         const category = Factory.create('category');
         const user = Factory.create('user');
