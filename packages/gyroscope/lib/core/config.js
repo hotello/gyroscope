@@ -14,12 +14,18 @@ export const config = {
     'posts.remove': withUser,
     'posts.publish.byQuery': noUser,
     'posts.publish.single': noUser,
+    'posts.addSubscriber': noUser,
+    'posts.removeSubscriber': noUser,
+    'posts.removeUser': noUser,
 
     'categories.insert': withUser,
     'categories.update': withUser,
     'categories.remove': withUser,
     'categories.publish.byQuery': noUser,
     'categories.publish.single': noUser,
+    'categories.addSubscriber': noUser,
+    'categories.removeSubscriber': noUser,
+    'categories.removeUser': noUser,
 
     'comments.insert': withUser,
     'comments.update': withUser,

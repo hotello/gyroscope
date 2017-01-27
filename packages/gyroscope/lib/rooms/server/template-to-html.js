@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { SSR } from 'meteor/meteorhacks:ssr';
 
-import { general } from '../core/settings.js';
+import { general } from '../../core/settings.js';
 
 export const templateToHTML = function(name, data) {
   // check if an external assets object has been set

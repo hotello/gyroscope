@@ -22,34 +22,3 @@ Rooms.schema = new SimpleSchema({
 });
 // attach schema
 Rooms.attachSchema(Rooms.schema);
-
-// users and subscriptions management
-const checkUserId = (userId) => new SimpleSchema({userId: ID_FIELD}).validate({userId});
-
-Rooms.helpers({
-  // add a user by its _id
-  addUser(userId) {
-    checkUserId(userId);
-    return Rooms.update(this._id, {$addToSet: {users: userId}});
-  },
-
-  // remove user by its _id
-  removeUser(userId) {
-    checkUserId(userId);
-    // ensure is also removed from subscribers
-    return Rooms.update(this._id, {$pull: {users: userId, subscribers: userId}});
-  },
-
-  // add a subscriber by its _id
-  addSubscriber(userId) {
-    checkUserId(userId);
-    // ensure is also added to users
-    return Rooms.update(this._id, {$addToSet: {subscribers: userId, users: userId}});
-  },
-
-  // remove subscriber by its _id
-  removeSubscriber(userId) {
-    checkUserId(userId);
-    return Rooms.update(this._id, {$pull: {subscribers: userId}});
-  }
-});

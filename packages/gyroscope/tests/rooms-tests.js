@@ -6,15 +6,12 @@ import { Random } from 'meteor/random';
 import { Factory } from 'meteor/dburles:factory';
 import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 
-import { notifications } from '../lib/core/settings.js';
-import { Rooms } from '../lib/rooms/rooms.js';
-import { Categories } from '../lib/categories/categories.js';
-if (Meteor.isServer) {
-  import {
-    notifyPostOnComment,
-    notifyCategoryOnPost
-  } from '../lib/rooms/hooks.js';
-}
+import {
+  notifications,
+  Rooms,
+  Posts,
+  Categories
+ } from 'meteor/hotello:gyroscope';
 
 describe('rooms', function() {
   describe('collection', function() {
@@ -87,6 +84,16 @@ describe('rooms', function() {
    * These association tests refer to Categories, but any collection would work.
    */
   describe('associations', function() {
+    it('should get a document\'s room and, if not existing, create it', function () {
+      const category = Factory.create('category');
+      // should create and get the same room
+      if (Meteor.isServer) {
+        assert.deepEqual(category.room(), category.room());
+      } else {
+        assert.isUndefined(category.room());
+      }
+    });
+
     if (Meteor.isServer) {
       before(function() {
         notifications.set({
@@ -96,24 +103,112 @@ describe('rooms', function() {
       beforeEach(function() {
         Rooms.remove({});
         Categories.remove({});
+        Meteor.users.remove({});
       });
 
-      it('should get a document\'s room and, if not existing, create it', function () {
+      it('should add a user to a document\'s room', function() {
         const category = Factory.create('category');
-        // should create and get the same room
-        assert.deepEqual(category.room(), category.room());
+        const user = Factory.create('user');
+        assert.equal(category.addUser(user._id), 1);
+        // check updated room
+        const updatedCategory = Categories.findOne(category._id);
+        assert.notInclude(updatedCategory.room().subscribers, user._id);
+        assert.include(updatedCategory.room().users, user._id);
+        assert.notInclude(Meteor.users.findOne(user._id).subscriptions, category._id);
       });
 
       it('should add a subscriber to a document\'s room', function() {
         const category = Factory.create('category');
-        assert.equal(category.addSubscriber(Random.id()), 1);
+        const user = Factory.create('user');
+        assert.equal(category.addSubscriber(user._id), 1);
+        // check updated room
+        const updatedCategory = Categories.findOne(category._id);
+        assert.include(updatedCategory.room().subscribers, user._id);
+        assert.include(updatedCategory.room().users, user._id);
+        assert.include(Meteor.users.findOne(user._id).subscriptions, category._id);
+      });
+
+      it('should remove a subscriber to a document\'s room', function() {
+        const category = Factory.create('category');
+        const user = Factory.create('user');
+        category.addSubscriber(user._id);
+        assert.equal(category.removeSubscriber(user._id), 1);
+        // check updated room
+        const updatedCategory = Categories.findOne(category._id);
+        assert.notInclude(updatedCategory.room().subscribers, user._id);
+        assert.include(updatedCategory.room().users, user._id);
+        assert.notInclude(Meteor.users.findOne(user._id).subscriptions, category._id);
       });
 
       it('should remove a user from a document\'s room', function() {
         const category = Factory.create('category');
-        assert.equal(category.removeUser(Random.id()), 1);
+        const user = Factory.create('user');
+        category.addSubscriber(user._id);
+        assert.equal(category.removeUser(user._id), 1);
+        // check updated room
+        const updatedCategory = Categories.findOne(category._id);
+        assert.notInclude(updatedCategory.room().subscribers, user._id);
+        assert.notInclude(updatedCategory.room().users, user._id);
+        assert.notInclude(Meteor.users.findOne(user._id).subscriptions, category._id);
       });
     }
+  });
+
+  describe('methods', function() {
+    const userId = Random.id();
+    const methodInvocation = { userId };
+    const methods = Categories.methods;
+
+    it('should add subscriber', function() {
+      const category = Factory.create('category');
+      // add subscriber
+      const result = methods.addSubscriber._execute(
+        methodInvocation,
+        { documentId: category._id }
+      );
+      if (Meteor.isClient) {
+        assert.isFalse(result);
+      } else {
+        assert.equal(result, 1);
+        assert.include(Categories.findOne(category._id).room().subscribers, userId);
+      }
+    });
+
+    it('should remove subscriber', function() {
+      const category = Factory.create('category');
+      if (Meteor.isServer) {
+        category.addSubscriber(userId);
+      }
+      // remove subscriber
+      const result = methods.removeSubscriber._execute(
+        methodInvocation,
+        { documentId: category._id }
+      );
+      if (Meteor.isClient) {
+        assert.isFalse(result);
+      } else {
+        assert.equal(result, 1);
+        assert.notInclude(Categories.findOne(category._id).room().subscribers, userId);
+      }
+    });
+
+    it('should remove user', function() {
+      const category = Factory.create('category');
+      if (Meteor.isServer) {
+        category.addSubscriber(userId);
+      }
+      // remove subscriber
+      const result = methods.removeUser._execute(
+        methodInvocation,
+        { documentId: category._id }
+      );
+      if (Meteor.isClient) {
+        assert.isFalse(result);
+      } else {
+        assert.equal(result, 1);
+        assert.notInclude(Categories.findOne(category._id).room().users, userId);
+      }
+    });
   });
 
   describe('notifications', function() {
@@ -152,31 +247,42 @@ describe('rooms', function() {
         assert.isArray(category.notify('test.notification', {document: {}}));
       });
 
-      it('should notify category\'s room on post', function() {
+      it('should notify category\'s room on post, but not post\'s author', function() {
         const category = Factory.create('category');
         const id = Random.id();
+        let hookCheck = 0;
         notifications.set({
           'posts.insert': function(data) {
             assert.property(data, 'post');
             assert.property(data, 'user');
+            assert.property(data, 'category');
+            assert.property(data, 'room');
+            hookCheck += 1;
           }
         });
         category.addSubscriber(id); // add subscriber to category
-        const post = Factory.create('post', {categories: [category._id]});
+        const post = Factory.create('post', {categories: [category._id], userId: id});
+        const postTwo = Factory.create('post', {categories: [category._id]});
+        assert.lengthOf(post.room().subscribers, 1);
+        assert.equal(hookCheck, 1);
       });
 
       it('should notify post\'s room on comment, but not post\'s author', function() {
         const post = Factory.create('post');
-        const postOwnerComment = Factory.create('comment', {postId: post._id, userId: post.userId});
+        let hookCheck = 0;
         notifications.set({
           'comments.insert': function(data) {
             assert.property(data, 'comment');
             assert.property(data, 'user');
+            assert.property(data, 'post');
+            assert.property(data, 'room');
+            hookCheck += 1;
           }
         });
-        const userComment = Factory.create('comment', {postId: post._id});
+        const ownerComment = Factory.create('comment', {postId: post._id, userId: post.userId});
+        const userComment = Factory.create('comment', {postId: post._id, userId: Random.id()});
         assert.lengthOf(post.room().subscribers, 2);
-        assert.equal(notifyPostOnComment(postOwnerComment, post)[0], userComment.userId);
+        assert.equal(hookCheck, 1);
       });
     }
   });

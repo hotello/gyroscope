@@ -1,6 +1,6 @@
 Package.describe({
   name: 'hotello:gyroscope',
-  version: '0.2.0',
+  version: '0.3.0',
   // Brief, one-line summary of the package.
   summary: 'Extensible social components like posts, comments and more.',
   // URL to the Git repository containing the source code for this package.
@@ -23,6 +23,7 @@ Package.onUse(function(api) {
     'jquery@1.11.10',
     'tracker@1.1.1',
     'email@1.1.18',
+    'accounts-base@1.2.14',
 
     'standard-minifier-js@1.2.1',
     'es5-shim@4.6.15',

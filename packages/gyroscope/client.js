@@ -1,3 +1,6 @@
+// on startup
+import './lib/rooms';
+
 // register api
 import './lib/posts/methods.js';
 import './lib/posts/queries.js';
@@ -19,10 +22,10 @@ import {
   queries,
   hooks
 } from './lib/core/settings.js';
-import { extendSchema } from './lib/core/collections-helpers.js';
 import { Posts } from './lib/posts/posts.js';
 import { Categories } from './lib/categories/categories.js';
 import { Comments } from './lib/comments/comments.js';
+import { attachRooms } from './lib/rooms/attachRooms.js';
 
 export {
   general,
@@ -32,5 +35,6 @@ export {
   extendSchema,
   Posts,
   Categories,
-  Comments
+  Comments,
+  attachRooms
 };

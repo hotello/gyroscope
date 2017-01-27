@@ -1,7 +1,6 @@
 // at startup
-import './lib/rooms/notify.js';
-import './lib/rooms/notification-helpers.js';
-import './lib/rooms/hooks.js';
+import './lib/rooms';
+import './lib/rooms/server';
 
 // register api
 import './lib/posts/server/publications.js';
@@ -23,12 +22,12 @@ import {
   notifications,
   hooks
 } from './lib/core/settings.js';
-import { extendSchema } from './lib/core/collections-helpers.js';
 import { Posts } from './lib/posts/posts.js';
 import { Categories } from './lib/categories/categories.js';
 import { Rooms } from './lib/rooms/rooms.js';
 import { Comments } from './lib/comments/comments.js';
-import { sendEmail } from './lib/rooms/send-email-notification.js';
+import { sendEmail } from './lib/rooms/server/send-email-notification.js';
+import { attachRooms } from './lib/rooms/attachRooms.js';
 
 export {
   general,
@@ -40,5 +39,6 @@ export {
   Categories,
   Rooms,
   Comments,
-  sendEmail
+  sendEmail,
+  attachRooms
 };

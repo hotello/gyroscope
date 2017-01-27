@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import { Factory } from 'meteor/dburles:factory';
 import { Random } from 'meteor/random';
 import faker from 'faker';
@@ -6,6 +7,9 @@ import { Posts } from '../lib/posts/posts.js';
 import { Categories } from '../lib/categories/categories.js';
 import { Comments } from '../lib/comments/comments.js';
 import { Rooms } from '../lib/rooms/rooms.js';
+
+// define factory generators for users
+Factory.define('user', Meteor.users);
 
 // define factory generators for posts
 Factory.define('post', Posts, {
