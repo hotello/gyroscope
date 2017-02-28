@@ -1,6 +1,6 @@
 Package.describe({
   name: 'hotello:gyroscope',
-  version: '0.4.0',
+  version: '0.4.1',
   // Brief, one-line summary of the package.
   summary: 'Extensible social components like posts, comments and more.',
   // URL to the Git repository containing the source code for this package.
@@ -37,12 +37,8 @@ Package.onUse(function(api) {
     'meteorhacks:ssr@2.2.0',
 
     'hotello:useful-dicts@1.0.2',
-    'hotello:collection-fast@1.4.2'
+    'hotello:collection-fast@1.4.3'
   ]);
-
-  api.addAssets([
-    'assets/email-templates/default.html'
-  ], 'server');
 
   api.mainModule('client.js', 'client');
   api.mainModule('server.js', 'server');

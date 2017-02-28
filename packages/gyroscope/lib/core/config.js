@@ -3,9 +3,7 @@ const noUser = (userId, data) => true;
 
 export const config = {
   general: {
-    // settings for assets
-    'assets': false,
-    'assets.emailTemplates': 'assets/email-templates'
+    'notifications.interval': 500
   },
 
   permit: {

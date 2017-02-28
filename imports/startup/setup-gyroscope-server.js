@@ -3,7 +3,6 @@ import {
   Categories,
   Comments,
   notifications,
-  sendEmail,
   general,
   hooks
 } from 'meteor/hotello:gyroscope';
@@ -11,42 +10,19 @@ import faker from 'faker';
 import { Factory } from 'meteor/dburles:factory';
 import { _ } from 'meteor/underscore';
 
-// pass enclosing app assets object to gyroscope package
 general.set({
-  'assets': Assets,
-  'assets.emailTemplates': 'private/email-templates'
+  'notifications.interval': 1000
 });
+
 // setup notifications
 notifications.set({
   'posts.insert': function(data) {
-    sendEmail('custom', {
-      // get user object from id with data.userId
-      to: `${data.recipientId}@email.com`,
-      from: 'test@gyroscope.com',
-      replyTo: 'test@gyroscope.com',
-      subject: 'New post on Gyroscope Test App',
-    }, {
-      body: `A new post was created: ${data.post.title}`,
-      callToAction: {
-        url: `http://gyroscope-test.com/posts/${data.post._id}`,
-        label: 'Go to post'
-      }
-    });
+    console.log('Notification for a post. Data is: ')
+    console.log(data);
   },
   'comments.insert': function(data) {
-    sendEmail('custom', {
-      // get user object from id with data.userId
-      to: `${data.recipientId}@email.com`,
-      from: 'test@gyroscope.com',
-      replyTo: 'test@gyroscope.com',
-      subject: 'New comment on Gyroscope Test App',
-    }, {
-      body: `A new comment was created: ${data.comment.body}`,
-      callToAction: {
-        url: `http://gyroscope-test.com/posts/${data.comment.postId}`,
-        label: 'Go to post'
-      }
-    });
+    console.log('Notification for a comment. Data is: ')
+    console.log(data);
   }
 });
 // fetch users for notifications

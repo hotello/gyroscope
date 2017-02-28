@@ -26,7 +26,6 @@ import { Posts } from './lib/posts/posts.js';
 import { Categories } from './lib/categories/categories.js';
 import { Rooms } from './lib/rooms/rooms.js';
 import { Comments } from './lib/comments/comments.js';
-import { sendEmail } from './lib/rooms/server/send-email-notification.js';
 import { attachRooms } from './lib/rooms/attachRooms.js';
 
 export {
@@ -39,6 +38,5 @@ export {
   Categories,
   Rooms,
   Comments,
-  sendEmail,
   attachRooms
 };
