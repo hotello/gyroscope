@@ -229,7 +229,8 @@ describe('rooms', function() {
       before(function() {
         notifications.set({
           'test.notification': function(data) {
-            assert.property(data, 'user');
+            assert.property(data, 'sender');
+            assert.property(data, 'recipient');
             assert.property(data, 'document');
           }
         });
@@ -267,7 +268,8 @@ describe('rooms', function() {
         notifications.set({
           'posts.insert': function(data) {
             assert.property(data, 'post');
-            assert.property(data, 'user');
+            assert.property(data, 'sender');
+            assert.property(data, 'recipient');
             assert.property(data, 'category');
             assert.property(data, 'room');
             hookCheck += 1;
@@ -286,7 +288,8 @@ describe('rooms', function() {
         notifications.set({
           'comments.insert': function(data) {
             assert.property(data, 'comment');
-            assert.property(data, 'user');
+            assert.property(data, 'sender');
+            assert.property(data, 'recipient');
             assert.property(data, 'post');
             assert.property(data, 'room');
             hookCheck += 1;

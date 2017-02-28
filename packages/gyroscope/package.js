@@ -37,7 +37,7 @@ Package.onUse(function(api) {
     'meteorhacks:ssr@2.2.0',
 
     'hotello:useful-dicts@1.0.2',
-    'hotello:collection-fast@1.4.1'
+    'hotello:collection-fast@1.4.2'
   ]);
 
   api.addAssets([

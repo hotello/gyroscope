@@ -3,29 +3,36 @@ import { _ } from 'meteor/underscore';
 
 import { notifications, hooks } from '../../core/settings.js';
 
-export const notify = function(userIds, notification, data) {
-  let users;
+export const notify = function(recipientIds, notification, data) {
+  let recipients;
+  let sender;
   // check correct function call
   new SimpleSchema({
-    userIds: {type: [String], regEx: SimpleSchema.RegEx.Id},
+    recipientIds: {type: [String], regEx: SimpleSchema.RegEx.Id},
     notification: {type: String},
     data: {type: Object, blackbox: true}
-  }).validate({ userIds, notification, data });
+  }).validate({ recipientIds, notification, data });
   // omit some subscribers
   if (_.has(data, 'without')) {
-    userIds = _.difference(userIds, data.without);
+    recipientIds = _.difference(recipientIds, data.without);
     data = _.omit(data, 'without')
   }
-  // fetch users only once
-  users = hooks.run('notify.fetchUsers', userIds);
+  // fetch recipients only once
+  recipients = hooks.run('notify.fetchRecipients', recipientIds);
+  // fetch sender
+  sender = hooks.run('notify.fetchSender', data.senderId);
   // notify each user
-  _.each(users, (user) => {
-    const notificationFn = notifications.get(notification);
-    // set userId in data
-    data.user = user;
-    // run the notification with data
-    notificationFn(data);
+  Meteor.defer(function() {
+    _.each(recipients, (recipient) => {
+      const notificationFn = notifications.get(notification);
+      // set recipient in data
+      data.recipient = recipient;
+      // set sender in data
+      data.sender = sender;
+      // run the notification with data
+      notificationFn(data);
+    });
   });
   // return the ids of the notified users
-  return userIds;
+  return recipientIds;
 };

@@ -11,13 +11,13 @@ const notifyCategoryOnPost = function(post) {
     _.each(post.categories, (categoryId) => {
       const room = Rooms.findOne({ownerId: categoryId});
       const category = Categories.findOne(categoryId);
-      if (room) room.notify('posts.insert', { post, category, room, without: [post.userId] });
+      if (room) room.notify('posts.insert', { post, category, room, without: [post.userId], senderId: post.userId });
     });
   }
 };
 const notifyPostOnComment = function(comment, post) {
   const room = Rooms.findOne({ownerId: comment.postId});
-  if (room) room.notify('comments.insert', { comment, post, room, without: [comment.userId] });
+  if (room) room.notify('comments.insert', { comment, post, room, without: [comment.userId], senderId: comment.userId });
 };
 
 // add post's user to subscribers on post insert
@@ -35,7 +35,9 @@ Posts.hooks.add('insert.after', function({ result, doc }) {
 
 // add notification on comment insert and add user to post's subscribers
 Comments.hooks.add('insert.after', function({ result, doc }) {
-  const comment = doc;
+  if (!result) return { result, doc };
+  // find comment and post
+  const comment = Comments.findOne(result);
   const post = Posts.findOne(comment.postId);
   // notify post's room
   notifyPostOnComment(comment, post);

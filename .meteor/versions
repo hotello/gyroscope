@@ -36,7 +36,7 @@ es5-shim@4.6.15
 fastclick@1.0.13
 geojson-utils@1.0.10
 hot-code-push@1.0.4
-hotello:collection-fast@1.4.1
+hotello:collection-fast@1.4.2
 hotello:gyroscope@0.2.0
 hotello:useful-dicts@1.0.2
 html-tools@1.0.11
