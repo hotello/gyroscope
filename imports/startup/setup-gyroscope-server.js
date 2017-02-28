@@ -14,14 +14,14 @@ import { _ } from 'meteor/underscore';
 // pass enclosing app assets object to gyroscope package
 general.set({
   'assets': Assets,
-  'assets.emailTemplates': 'email-templates'
+  'assets.emailTemplates': 'private/email-templates'
 });
 // setup notifications
 notifications.set({
   'posts.insert': function(data) {
     sendEmail('custom', {
       // get user object from id with data.userId
-      to: `${data.user.email}`,
+      to: `${data.recipientId}@email.com`,
       from: 'test@gyroscope.com',
       replyTo: 'test@gyroscope.com',
       subject: 'New post on Gyroscope Test App',
@@ -36,7 +36,7 @@ notifications.set({
   'comments.insert': function(data) {
     sendEmail('custom', {
       // get user object from id with data.userId
-      to: `${data.user.email}`,
+      to: `${data.recipientId}@email.com`,
       from: 'test@gyroscope.com',
       replyTo: 'test@gyroscope.com',
       subject: 'New comment on Gyroscope Test App',
@@ -50,10 +50,8 @@ notifications.set({
   }
 });
 // fetch users for notifications
-hooks.add('notify.fetchUsers', function(userIds) {
-  return _.map(userIds, (userId) => {
-    return {email: `${userId}@email.com`};
-  }); /* Meteor.users.find({_id: {$in: userIds}}).fetch() */
+hooks.add('notify.fetchSender', function(senderId) {
+  return {email: `${senderId}@email.com`}; /* Meteor.users.findOne(userId) */
 });
 
 // some publications
