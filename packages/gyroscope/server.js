@@ -20,7 +20,8 @@ import {
   general,
   permit,
   notifications,
-  hooks
+  hooks,
+  payloads
 } from './lib/core/settings.js';
 import { Posts } from './lib/posts/posts.js';
 import { Categories } from './lib/categories/categories.js';
@@ -33,7 +34,7 @@ export {
   permit,
   notifications,
   hooks,
-  extendSchema,
+  payloads,
   Posts,
   Categories,
   Rooms,

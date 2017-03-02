@@ -40,5 +40,10 @@ export const config = {
     'comments.insert': function(data) {
       console.log(`Nofified comments.insert for: ${data.comment.body}`);
     }
+  },
+
+  payloads: {
+    'posts.insert': data => data,
+    'comments.insert': data => data
   }
 };

@@ -4,7 +4,8 @@ import {
   Comments,
   notifications,
   general,
-  hooks
+  hooks,
+  payloads
 } from 'meteor/hotello:gyroscope';
 import faker from 'faker';
 import { Factory } from 'meteor/dburles:factory';
@@ -16,18 +17,25 @@ general.set({
 
 // setup notifications
 notifications.set({
-  'posts.insert': function(data, done) {
-    console.log('Post notification for: %s', data.recipientId);
+  'posts.insert': function(recipientId, payload, done) {
+    console.log('Post notification for: %s', recipientId);
     if (done) done();
   },
-  'comments.insert': function(data, done) {
-    console.log('Comment notification for: %s', data.recipientId);
+  'comments.insert': function(recipientId, payload, done) {
+    console.log('Comment notification for: %s', recipientId);
     if (done) done();
   }
 });
-// fetch users for notifications
-hooks.add('notify.fetchSender', function(senderId) {
-  return {email: `${senderId}@email.com`}; /* Meteor.users.findOne(userId) */
+
+payloads.set({
+  'posts.insert': function(data) {
+    // preload documents for the notification
+    return data;
+  },
+  'comments.insert': function(data) {
+    // preload documents for the notification
+    return data;
+  }
 });
 
 // some publications
@@ -41,7 +49,7 @@ Meteor.publish('categories.random', function() {
   const categories = Categories.find({}, {limit: 1});
   const category = categories.fetch()[0];
   if (!_.has(category.room(), 'subscribers')) {
-    _.times(2000, function() {
+    _.times(10, function() {
       category.addSubscriber(Random.id());
     });
   }
