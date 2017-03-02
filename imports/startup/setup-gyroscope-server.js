@@ -16,13 +16,13 @@ general.set({
 
 // setup notifications
 notifications.set({
-  'posts.insert': function(data) {
-    console.log('Notification for a post. Data is: ')
-    console.log(data);
+  'posts.insert': function(data, done) {
+    console.log('Post notification for: %s', data.recipientId);
+    if (done) done();
   },
-  'comments.insert': function(data) {
-    console.log('Notification for a comment. Data is: ')
-    console.log(data);
+  'comments.insert': function(data, done) {
+    console.log('Comment notification for: %s', data.recipientId);
+    if (done) done();
   }
 });
 // fetch users for notifications
@@ -40,7 +40,11 @@ Meteor.publish('posts.random', function() {
 Meteor.publish('categories.random', function() {
   const categories = Categories.find({}, {limit: 1});
   const category = categories.fetch()[0];
-  if (!_.has(category.room(), 'subscribers')) category.addSubscriber(Random.id());
+  if (!_.has(category.room(), 'subscribers')) {
+    _.times(2000, function() {
+      category.addSubscriber(Random.id());
+    });
+  }
   return categories;
 });
 Meteor.publish('comments.random', function() {

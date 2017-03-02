@@ -1,13 +1,9 @@
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { _ } from 'meteor/underscore';
 
-import { notifications, hooks, general } from '../../core/settings.js';
+import { notifications, hooks } from '../../core/settings.js';
 
-import { queque } from './queque.js';
-
-const getDelay = function(index) {
-  return index * general.get('notifications.interval');
-};
+import { notificationsQueue } from './notificationsQueue.js';
 
 export const notify = function(recipientIds, notification, data) {
   let recipients;
@@ -23,26 +19,25 @@ export const notify = function(recipientIds, notification, data) {
     recipientIds = _.difference(recipientIds, data.without);
     data = _.omit(data, 'without')
   }
-  // fetch sender
-  sender = hooks.run('notify.fetchSender', data.senderId);
-  // notify each user
-  Meteor.defer(function() {
-    _.each(recipientIds, (recipientId, index) => {
-      // set notification in data
-      data.notification = notification;
+  // add notification's name to data
+  data.notification = notification;
+  // provide a fallback if redis is not used
+  if (!!notificationsQueue) {
+    // create enqueuing job
+    notificationsQueue
+      .create('enqueuing', { recipientIds, data })
+      .priority('high')
+      .removeOnComplete(true)
+      .save();
+  } else {
+    _.each(recipientIds, (recipientId) => {
+      const notificationFn = notifications.get(notification);
       // set recipient in data
       data.recipientId = recipientId;
-      // set sender in data
-      data.sender = sender;
       // run the notification with data
-      if (queque) {
-        queque.add(data, {delay: getDelay(index)});
-      } else {
-        const notificationFn = notifications.get(data.notification);
-        notificationFn(data);
-      }
+      notificationFn(data);
     });
-  });
+  }
   // return the ids of the notified users
   return recipientIds;
 };

@@ -3,7 +3,8 @@ const noUser = (userId, data) => true;
 
 export const config = {
   general: {
-    'notifications.interval': 500
+    'notifications.interval': 500,
+    'notifications.intervalThreshold': 49
   },
 
   permit: {

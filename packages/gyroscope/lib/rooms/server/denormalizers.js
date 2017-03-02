@@ -10,14 +10,29 @@ const notifyCategoryOnPost = function(post) {
   if (post && _.has(post, 'categories')) {
     _.each(post.categories, (categoryId) => {
       const room = Rooms.findOne({ownerId: categoryId});
-      const category = Categories.findOne(categoryId);
-      if (room) room.notify('posts.insert', { post, category, room, without: [post.userId], senderId: post.userId });
+      if (room) {
+        room.notify('posts.insert', {
+          postId: post._id,
+          categoryId,
+          roomId: room._id,
+          without: [post.userId],
+          senderId: post.userId
+        });
+      }
     });
   }
 };
 const notifyPostOnComment = function(comment, post) {
   const room = Rooms.findOne({ownerId: comment.postId});
-  if (room) room.notify('comments.insert', { comment, post, room, without: [comment.userId], senderId: comment.userId });
+  if (room) {
+    room.notify('comments.insert', {
+      commentId: comment._id,
+      postId: post._id,
+      roomId: room._id,
+      without: [comment.userId],
+      senderId: comment.userId
+    });
+  }
 };
 
 // add post's user to subscribers on post insert
