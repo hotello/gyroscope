@@ -59,6 +59,9 @@ const enqueue = function(job, done) {
       .removeOnComplete(true)
       .save(function() {
         job.progress(index, recipientIds.length, { index });
+        kue.Job.get(job.id, function(err, job) {
+          console.log('job current index: %s', job.progress_data.index);
+        });
         callback();
       });
     }
