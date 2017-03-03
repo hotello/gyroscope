@@ -3,7 +3,7 @@ import { _ } from 'meteor/underscore';
 
 import { notifications, hooks, payloads } from '../../core/settings.js';
 import { Notifications } from '../notifications.js';
-import { notificationsQueue } from './notificationsQueue.js';
+import { notificationsQueue } from './queues.js';
 
 export const notify = function(recipientIds, name, data) {
   // check correct function call
@@ -29,8 +29,8 @@ export const notify = function(recipientIds, name, data) {
   // provide a fallback if redis is not used
   if (!!notificationsQueue) {
     // create enqueuing job
-    notificationsQueue
-      .create('enqueuing', { recipientIds, notificationId })
+    const job = notificationsQueue
+      .create('enqueue', { recipientIds, notificationId })
       .priority('high')
       .removeOnComplete(true)
       .save();
