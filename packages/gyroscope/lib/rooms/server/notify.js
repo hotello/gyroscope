@@ -37,10 +37,9 @@ export const notify = function(recipientIds, name, data) {
   } else {
     _.each(recipientIds, (recipientId) => {
       const notificationFn = notifications.get(name);
-      // set recipient in data
-      payload.recipientId = recipientId;
+      const done = function() {};
       // run the notification with data
-      notificationFn(payload);
+      notificationFn(recipientId, payload, done);
     });
   }
   // return the ids of the notified users
