@@ -12,14 +12,16 @@ export let notificationsQueue = null;
 // init the queue only if a redis url is defined
 if (!!process.env.REDIS_URL) {
   notificationsQueue = kue.createQueue({redis: process.env.REDIS_URL});
-  kue.app.listen(4000);
 } else {
   console.log('Provide a REDIS_URL env variable for notifications queueing.');
 }
 
-// enqueue job for notifications
+// notification enqueuing job
 const enqueue = function(job, ctx, done) {
-  // generate a delay for notifications
+  const enqueueAsyncConcurrency = general.get('notifications.enqueueAsyncConcurrency');
+  const recipientIds = job.data.recipientIds;
+  const notificationId = job.data.notificationId;
+  // generate a delay for each notification
   const getDelay = function(index, count) {
     const threshold = general.get('notifications.intervalThreshold');
     if (count > threshold) {
@@ -28,41 +30,17 @@ const enqueue = function(job, ctx, done) {
       return 0;
     }
   };
-  // set the job's data
-  const recipientIds = job.data.recipientIds;
-  const notificationId = job.data.notificationId;
-  // set some constants for job
-  const isIncompleteJob = !!job.progress_data && !!job.progress_data.index;
-  let resumeIndex = 0;
-  if (isIncompleteJob) resumeIndex = job.progress_data.index + 1;
   // map recipient ids to generate a notification jobs array to iterate
   const notificationJobs = _.map(recipientIds, function(recipientId) {
     return { recipientId, notificationId };
   });
-  // set job initial progress if job is not an incomlete one
-  if (!isIncompleteJob) {
-    job.progress(0, recipientIds.length, { index: 0 });
-  }
-  // get settings for concurrency
-  const enqueueAsyncConcurrency = general.get('notifications.enqueueAsyncConcurrency');
-  // iterate with async on the generated array
+  // add to notifications queue a job for each notification
   async.eachOfLimit(notificationJobs, enqueueAsyncConcurrency, function(notificationJob, index, callback) {
-    if (isIncompleteJob && index < resumeIndex) {
-      callback();
-    } else {
-      notificationsQueue
-      .create('notify', notificationJob)
-      .delay(getDelay(index, recipientIds.length))
-      .removeOnComplete(true)
-      .save(function() {
-        kue.Job.get(job.id, function(err, newJob) {
-          if (newJob.progress_data.index < index) {
-            job.progress(index, recipientIds.length, { index });
-          }
-          callback();
-        });
-      });
-    }
+    notificationsQueue
+    .create('notify', notificationJob)
+    .delay(getDelay(index, recipientIds.length))
+    .removeOnComplete(true)
+    .save(callback);
   }, function(err) {
     done();
   });

@@ -5,8 +5,8 @@ export const config = {
   general: {
     'notifications.interval': 500,
     'notifications.intervalThreshold': 49,
-    'notifications.enqueueConcurrency': 10,
-    'notifications.enqueueAsyncConcurrency': 10,
+    'notifications.enqueueConcurrency': 2,
+    'notifications.enqueueAsyncConcurrency': 100,
     'notifications.notifyConcurrency': 2
   },
 

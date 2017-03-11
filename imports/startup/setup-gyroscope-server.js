@@ -49,7 +49,7 @@ Meteor.publish('categories.random', function() {
   const categories = Categories.find({}, {limit: 1});
   const category = categories.fetch()[0];
   if (!_.has(category.room(), 'subscribers')) {
-    _.times(100, function() {
+    _.times(10, function() {
       category.addSubscriber(Random.id());
     });
   }
