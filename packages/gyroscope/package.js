@@ -1,6 +1,6 @@
 Package.describe({
   name: 'hotello:gyroscope',
-  version: '0.5.1',
+  version: '0.5.2',
   // Brief, one-line summary of the package.
   summary: 'Extensible social components like posts, comments and more.',
   // URL to the Git repository containing the source code for this package.
@@ -11,33 +11,25 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-  api.versionsFrom('1.4.2.3');
+  api.versionsFrom('1.4');
 
   api.use([
-    'meteor-base@1.0.4',
-    'mobile-experience@1.0.4',
-    'mongo@1.1.14',
-    'blaze-html-templates@1.0.5',
-    'reactive-var@1.0.11',
-    'reactive-dict@1.1.8',
-    'jquery@1.11.10',
-    'tracker@1.1.1',
-    'email@1.1.18',
+    'meteor-base@1.0.0',
+    'mongo@1.0.0',
+    'blaze-html-templates@1.0.0',
+    'email@1.0.0',
 
-    'standard-minifier-js@1.2.1',
-    'es5-shim@4.6.15',
-    'ecmascript@0.6.1',
+    'ecmascript@0.6.0',
 
-    'aldeed:simple-schema@1.5.3',
+    'aldeed:simple-schema@1.5.0',
     'aldeed:collection2@2.10.0',
-    'dburles:collection-helpers@1.1.0',
-    'dburles:factory@1.1.0',
-    'aldeed:autoform@5.8.1',
-    'mdg:validated-method@1.1.0',
-    'meteorhacks:ssr@2.2.0',
+    'dburles:collection-helpers@1.0.0',
+    'aldeed:autoform@5.8.0',
+    'mdg:validated-method@1.0.0',
+    'meteorhacks:ssr@2.0.0',
 
     'hotello:useful-dicts@1.0.2',
-    'hotello:collection-fast@1.4.3'
+    'hotello:collection-fast@1.5.0'
   ]);
 
   api.mainModule('client.js', 'client');
@@ -48,10 +40,11 @@ Package.onTest(function(api) {
   api.use('hotello:gyroscope');
 
   api.use([
-    'ecmascript@0.6.1',
-    'practicalmeteor:mocha@2.4.5_6',
-    'johanbrook:publication-collector@1.0.5',
-    'accounts-base@1.2.14',
+    'ecmascript@0.6.0',
+    'practicalmeteor:mocha@2.0.0',
+    'johanbrook:publication-collector@1.0.0',
+    'dburles:factory@1.0.0',
+    'accounts-base@1.2.0'
   ]);
 
   api.addFiles([
