@@ -52,10 +52,16 @@ const notify = function(job, ctx, done) {
   const notification = Notifications.findOne(job.data.notificationId, {
     fields: {name: 1, payload: 1}
   });
-  // get notification function
-  const notificationFn = notifications.get(notification.name);
-  // process notification
-  notificationFn(job.data.recipientId, notification.payload, done);
+  // check if notification exists
+  if (notification) {
+    // get notification function
+    const notificationFn = notifications.get(notification.name);
+    // process notification
+    notificationFn(job.data.recipientId, notification.payload, done);
+  } else {
+    // mark as done to remove it
+    done();
+  }
 };
 
 // start processing the queues only if process is worker
