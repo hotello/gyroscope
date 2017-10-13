@@ -1,5 +1,6 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { CollectionFast } from 'meteor/hotello:collection-fast';
 
 import { ID_FIELD, ID_FIELD_OPT } from '../core/collections-helpers.js';
 

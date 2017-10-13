@@ -1,10 +1,10 @@
 import { Notifications } from './notifications.js';
 
-Comments.queries.set({
-  'byRecipient': function(params) {
+Notifications.queries.set({
+  'all': function(params) {
     const MAX_NOTIFICATIONS = 1000;
     return {
-      selector: {recipientIds: params.recipientId},
+      selector: {},
       options: {
         limit: Math.min(params.limit, MAX_NOTIFICATIONS)
       }

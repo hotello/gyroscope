@@ -1,4 +1,4 @@
-import { Posts, Categories, Comments } from 'meteor/hotello:gyroscope';
+import { Posts, Categories, Comments, Notifications } from 'meteor/hotello:gyroscope';
 
 import './body.html';
 
@@ -67,6 +67,28 @@ Template.commentsList.helpers({
   }
 });
 Template.categoriesList.events({
+  'click .js-load-more'() {
+    this.loadMore();
+  }
+});
+
+/**
+ * notificationsList
+ */
+Template.notificationsList.helpers({
+  collection: () => Notifications,
+  query: () => {
+    const perPage = 5;
+    return {
+      name: 'all',
+      params: { perPage }
+    };
+  },
+  show(self) {
+    console.log(self);
+  }
+});
+Template.notificationsList.events({
   'click .js-load-more'() {
     this.loadMore();
   }

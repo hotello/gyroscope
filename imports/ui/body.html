@@ -61,6 +61,12 @@
   {{#if Template.subscriptionsReady}}
     {{> commentsList postId=post._id}}
   {{/if}}
+
+  <h2>Notifications</h2>
+
+  <h3>List</h3>
+
+  {{> notificationsList}}
 </body>
 
 <template name="postsList">
@@ -112,4 +118,21 @@
       <button class="js-load-more">Load More...</button>
     {{/if}}
   {{/Comments_list}}
+</template>
+
+<template name="notificationsList">
+  {{#List collection=collection query=query}}
+    {{#each document in listArgs.documents}}
+      <p>{{document.name}}</p>
+    {{/each}}
+    {{#if listArgs.noResults}}
+      <p>No notifications here.</p>
+    {{/if}}
+    {{#if listArgs.loading}}
+      <p>Loading...</p>
+    {{/if}}
+    {{#if listArgs.hasMore}}
+      <button class="js-load-more">Load More...</button>
+    {{/if}}
+  {{/List}}
 </template>
