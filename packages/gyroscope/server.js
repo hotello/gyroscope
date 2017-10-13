@@ -14,6 +14,9 @@ import './lib/comments/server/publications.js';
 import './lib/comments/methods.js';
 import './lib/comments/queries.js';
 import './lib/comments/denormalizers.js';
+import './lib/rooms/queries.js';
+import './lib/rooms/server/publications.js';
+
 
 // exports
 import {
@@ -27,6 +30,7 @@ import { Posts } from './lib/posts/posts.js';
 import { Categories } from './lib/categories/categories.js';
 import { Rooms } from './lib/rooms/rooms.js';
 import { Comments } from './lib/comments/comments.js';
+import { Notifications } from './lib/rooms/notifications.js';
 import { attachRooms } from './lib/rooms/attachRooms.js';
 
 export {
@@ -39,5 +43,6 @@ export {
   Categories,
   Rooms,
   Comments,
+  Notifications,
   attachRooms
 };

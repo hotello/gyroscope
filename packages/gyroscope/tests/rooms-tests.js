@@ -10,7 +10,8 @@ import {
   notifications,
   Rooms,
   Posts,
-  Categories
+  Categories,
+  Notifications
  } from 'meteor/hotello:gyroscope';
 
 describe('rooms', function() {

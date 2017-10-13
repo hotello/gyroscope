@@ -34,6 +34,9 @@ export const config = {
     'comments.remove': withUser,
     'comments.publish.byQuery': noUser,
     'comments.publish.single': noUser
+
+    'notifications.publish.byQuery': noUser,
+    'notifications.publish.single': noUser
   },
 
   notifications: {
